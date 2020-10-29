@@ -2,16 +2,16 @@ import React, { useCallback, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FiCamera } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
+import { cpf } from 'cpf-cnpj-validator';
 import * as Yup from 'yup';
 
+import { parseISO, isValid } from 'date-fns';
 import {
   Container,
   ProfileInfo,
   AvatarContainer,
   Form,
   InputGroup,
-  ScheduleArea,
-  DeleteScheduleArea,
 } from './styles';
 
 import warningIcon from '../../assets/images/icons/warning.svg';
@@ -20,6 +20,7 @@ import backgroundThings from '../../assets/images/background-things.svg';
 import Header from '../../components/Header';
 
 import Input from '../../components/Input';
+import InputFile from '../../components/InputFile';
 import Textarea from '../../components/TextArea';
 import Select from '../../components/Select';
 import api from '../../services/api';
@@ -27,130 +28,105 @@ import InputMask from '../../components/InputMask';
 import InputMoney from '../../components/InputMoney';
 import getValidationErrors from '../../utils/getValidationErrors';
 
-interface ScheduleProps {
-  week_day: string;
-  from: string;
-  to: string;
-  options: { value: string; label: string }[];
-}
-
 interface FormProps {
   name: string;
+  surname: string;
+  email: string;
+  born: string;
+  cpf: string;
+  nationality: string;
   bio: string;
-  whatsapp: string;
-  avatar: string;
-  cost: string;
-  subject: string;
-  schedule: ScheduleProps[];
+  salary_expectations: string;
+  contract: string;
 }
 
 const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { push } = useHistory();
 
-  const [days] = useState([
-    { value: '0', label: 'Domingo' },
-    { value: '1', label: 'Segunda-feira' },
-    { value: '2', label: 'Terça-feira' },
-    { value: '3', label: 'Quarta-feira' },
-    { value: '4', label: 'Quinta-feira' },
-    { value: '5', label: 'Sexta-feira' },
-    { value: '6', label: 'Sabádo' },
-  ]);
-  const [scheduleClasses, setScheduleClasses] = useState<ScheduleProps[]>([
-    { options: days, week_day: '', from: '', to: '' },
-  ]);
+  const handleSubmit = useCallback(async (data: FormProps) => {
+    const formattedSalaryExpectations = data.salary_expectations
+      .replace(/\s/g, '')
+      .replace(/\./g, '')
+      .replace(/,/g, '.');
 
-  const addNewScheduleItem = useCallback(() => {
-    const { schedule } = formRef.current?.getData() as FormProps;
-    const usedDaysArray = schedule.map((dayItem) => dayItem.week_day);
-    const notUsedDays = days.filter(
-      (day) => !usedDaysArray.includes(day.value),
-    );
+    const formattedCPF = data.cpf.replace(/\D/g, '');
+    const formattedBorn = data.born.split('/').reverse().join('-');
 
-    setScheduleClasses((oldScheduleClasses) => [
-      ...oldScheduleClasses,
-      { options: notUsedDays, week_day: '', from: '', to: '' },
-    ]);
-  }, [days]);
+    const dataFormatted = {
+      name: data.name.replace(/\s/g, ''),
+      surname: data.name.replace(/\s/g, ''),
+      email: data.name.replace(/\s/g, ''),
+      bio: data.name.replace(/\s/g, ''),
+      contract: data.name.replace(/\s/g, ''),
+      cpf: formattedCPF,
+      born: formattedBorn,
+      salary_expectations: formattedSalaryExpectations,
+    };
 
-  const handleRemoveSchedule = useCallback(
-    (index: number) => {
-      const scheduleRemoved = scheduleClasses.filter(
-        (_, scheduleItemIndex) => scheduleItemIndex !== index,
-      );
+    try {
+      formRef.current?.setErrors([]);
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        surname: Yup.string().required('Sobrenome obrigatório'),
+        email: Yup.string()
+          .email('Email inválido')
+          .required('Nome obrigatório'),
+        // born: Yup.string().required('Data de nascimento obrigatória'),
+        born: Yup.string().test(
+          'born_date',
+          'born_date_must_be_a_valid_date',
+          function testDateValid(bornDate) {
+            if (!bornDate) {
+              return false;
+            }
 
-      if (!scheduleRemoved.length) {
-        return;
-      }
+            const isValidDate = parseISO(bornDate);
 
-      setScheduleClasses(scheduleRemoved);
-    },
-    [scheduleClasses],
-  );
+            if (!isValid(isValidDate)) {
+              return false;
+            }
 
-  const handleSubmit = useCallback(
-    async (data: FormProps) => {
-      const formattedCost = data.cost.replace(/\./g, '').replace(/\,/g, '.');
-      const formattedWhatsapp = data.whatsapp.replace(/\D/g, '');
-      const dataFormatted = {
-        ...data,
-        cost: formattedCost,
-        whatsapp: formattedWhatsapp,
-      };
+            return true;
+          },
+        ),
+        cpf: Yup.string()
+          .test('cpf_validate', 'check_if_cpf_is_valid', function isValidCPF(
+            checkCPF,
+          ) {
+            if (!checkCPF) {
+              return false;
+            }
 
-      try {
-        formRef.current?.setErrors([]);
-        const schema = Yup.object().shape({
-          name: Yup.string().required('Nome obrigatório'),
-          surname: Yup.string().required('Sobrenome obrigatório'),
-          email: Yup.string()
-            .email('Email inválido')
-            .required('Nome obrigatório'),
-          whatsapp: Yup.string()
-            .min(11, 'Whatsapp inválido')
-            .required('Whatsapp obrigatório'),
-          bio: Yup.string().required('Whatsapp obrigatório'),
-          subject: Yup.string().required('Matéria obrigatório'),
-          cost: Yup.number().required('Custo obrigátorio'),
-          schedule: Yup.array().of(
-            Yup.object().shape({
-              week_day: Yup.string().required('Dia da semana obrigatório'),
-              from: Yup.string()
-                .test(
-                  'start_time_test',
-                  'starttime_must_be_greater_than_end_time_',
-                  function testStartTime(startTimeValue) {
-                    const { to: endTimeValue } = this.parent;
+            if (!cpf.isValid(checkCPF)) {
+              return false;
+            }
 
-                    if (startTimeValue) {
-                      return endTimeValue > startTimeValue;
-                    }
+            return true;
+          })
+          .required('CPF obrigatório'),
+        civil_status: Yup.string().required('Estado cívil obrigatória'),
+        nationality: Yup.string().required('Nacionalidade obrigatória'),
+        bio: Yup.string().required('Apresentação obrigatória'),
+        salary_expectations: Yup.string().required(
+          'Pretensão salarial obrigatória',
+        ),
+        contract: Yup.string().required('Contrato obrigatória'),
+      });
 
-                    return false;
-                  },
-                )
-                .required('Horário de início obrigatório'),
-              to: Yup.string().required('Horário de fim obrigatório'),
-            }),
-          ),
-        });
-
-        await schema.validate(dataFormatted, {
-          abortEarly: false,
-        });
-        console.log(dataFormatted);
-        // await api.post('/classes', {
-        //   ...dataFormatted,
-        // });
-        // push('/landing');
-      } catch (err) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors);
-      }
-    },
-    [push],
-  );
+      await schema.validate(dataFormatted, {
+        abortEarly: false,
+      });
+      console.log(dataFormatted);
+      // await api.post('/classes', {
+      //   ...dataFormatted,
+      // });
+      // push('/landing');
+    } catch (err) {
+      const errors = getValidationErrors(err);
+      formRef.current?.setErrors(errors);
+    }
+  }, []);
 
   return (
     <Container>
@@ -186,96 +162,85 @@ const Profile: React.FC = () => {
             <Input label="Sobrenome" name="surname" id="surname" />
           </InputGroup>
           <InputGroup>
-            <Input label="Email" name="email" id="email" width="65%" />
+            <Input label="Email" name="email" id="email" width="75%" />
             <InputMask
-              mask="(99) 99999-9999"
-              label="WhatsApp"
-              name="whatsapp"
-              id="whatsapp"
-              width="35%"
+              mask="99/99/9999"
+              label="Data de nascimento"
+              name="born"
+              id="born"
+              width="25%"
             />
           </InputGroup>
-
-          <Textarea label="Biografia" name="bio" id="bio" />
-        </fieldset>
-
-        <fieldset>
-          <legend>Sobre a aula</legend>
 
           <InputGroup>
-            <Select
-              label="Matéria"
-              placeholder="Matéria"
-              name="subject"
-              id="subject"
-              width="65%"
-              options={days}
+            <InputMask
+              mask="999.999.999-99"
+              label="CPF"
+              name="cpf"
+              id="cpf"
+              width="40%"
             />
-            <InputMoney
-              placeholder="0,00"
-              label="Custo da sua hora por aula"
-              name="cost"
-              prefix="R$"
-              id="cost"
-              width="35%"
+            <Select
+              label="Estado civil"
+              name="civil_status"
+              id="civil_status"
+              width="30%"
+              placeholder="Selecione"
+              options={[
+                { value: 'Solteiro', label: 'Solteiro' },
+                { value: 'Casado', label: 'Casado' },
+                { value: 'Divorciado', label: 'Divorciado' },
+                {
+                  value: 'Separado judicialmente',
+                  label: 'Separado judicialmente',
+                },
+                { value: 'Viúvo', label: 'Viúvo' },
+              ]}
+            />
+
+            <Select
+              label="Nacionalidade"
+              name="nationality"
+              id="nationality"
+              width="30%"
+              placeholder="Selecione"
+              options={[
+                { value: 'Brasil', label: 'Brasil' },
+                { value: 'Estados Unidos', label: 'Estados Unidos' },
+              ]}
             />
           </InputGroup>
         </fieldset>
 
         <fieldset>
-          <legend>
-            Horários disponíveis
-            <button type="button" onClick={addNewScheduleItem}>
-              + Novo horário
-            </button>
-          </legend>
+          <legend>Informações para empresas</legend>
+          <Textarea label="Apresentação" id="bio" name="bio" />
 
-          {scheduleClasses.map((scheduleClass, index) => {
-            return (
-              <div key={index}>
-                <ScheduleArea>
-                  <Select
-                    label="Dia da semana"
-                    placeholder="Selecione o dia desejado"
-                    name={`schedule[${index}][week_day]`}
-                    options={scheduleClass.options}
-                  />
-                  <InputMask
-                    name={`schedule[${index}][from]`}
-                    label="Das"
-                    mask={[
-                      /^([0-1])/,
-                      /[0-9]|2[0-4]/,
-                      ':',
-                      /([0-5])/,
-                      /([0-9])$/,
-                    ]}
-                  />
-                  <InputMask
-                    name={`schedule[${index}][to]`}
-                    label="Até"
-                    mask={[
-                      /^([0-1])/,
-                      /[0-9]|2[0-4]/,
-                      ':',
-                      /([0-5])/,
-                      /([0-9])$/,
-                    ]}
-                  />
-                </ScheduleArea>
-                <DeleteScheduleArea>
-                  <hr />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveSchedule(index)}
-                  >
-                    Excluir horário
-                  </button>
-                  <hr />
-                </DeleteScheduleArea>
-              </div>
-            );
-          })}
+          <InputGroup>
+            <InputMoney
+              prefix="R$"
+              label="Pretensão salarial"
+              id="salary_expectations"
+              name="salary_expectations"
+            />
+
+            <Select
+              label="Contrato"
+              id="contract"
+              name="contract"
+              placeholder="Selecione"
+              options={[
+                { value: 'CLT', label: 'CLT' },
+                { value: 'PJ', label: 'PJ' },
+              ]}
+            />
+            <InputFile
+              imageAlt="Upload do currículo"
+              id="resume"
+              name="resume"
+              description="Coloque seu currículo"
+            />
+          </InputGroup>
         </fieldset>
 
         <footer>

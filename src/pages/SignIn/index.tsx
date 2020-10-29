@@ -13,7 +13,7 @@ import {
   Footer,
 } from './styles';
 
-import logo from '../../assets/images/logo.svg';
+import logo from '../../assets/images/logo.png';
 
 import purpleHeartIcon from '../../assets/images/icons/purple-heart.svg';
 import showPasswordIcon from '../../assets/images/icons/show-password.svg';
@@ -88,8 +88,8 @@ const SignIn: React.FC = () => {
     <Container>
       <Background>
         <LogoContainer>
-          <img src={logo} alt="Logo Proffy" />
-          <h1>Sua plataforma de estudo online</h1>
+          <img src={logo} alt="Logo WorkSystem" />
+          <h1>Sua plataforma de trabalho online</h1>
         </LogoContainer>
       </Background>
       <Content>
