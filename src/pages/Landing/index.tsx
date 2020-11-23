@@ -1,100 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import { FiPower } from 'react-icons/fi';
+import React, { useEffect, useState } from 'react';
 
-import {
-  Container,
-  TopBar,
-  ProfileArea,
-  Logout,
-  Content,
-  LogoContainer,
-  HeroImage,
-  Footer,
-  WelcomeMessage,
-  ButtonsContainer,
-  ButtonTypeChoose,
-  TotalConnections,
-} from './styles';
+import { useHistory } from 'react-router-dom';
+import { Container, Content, JobList, NoResult } from './styles';
 
-import logo from '../../assets/images/logo.svg';
-import landing from '../../assets/images/landing.svg';
-
-import studyIcon from '../../assets/images/icons/study.svg';
-import giveClassesIcon from '../../assets/images/icons/give-classes.svg';
-import purpleHeartIcon from '../../assets/images/icons/purple-heart.svg';
 import api from '../../services/api';
+import JobItem from '../../components/JobItem';
+import Header from '../../components/Header';
 
-interface IConnectionsResponse {
-  total: number;
+interface JobProps {
+  id: number;
+  title: string;
+  description: string;
+  company: {
+    trade_name: string;
+    profile: {
+      avatar: string;
+    };
+  };
 }
 
 const Landing: React.FC = () => {
-  const [totalConnections, setTotalConnections] = useState(0);
+  const [jobs, setJobs] = useState<JobProps[]>([]);
 
   useEffect(() => {
-    async function getTotalConnections() {
-      const connectionsResponse = await api.get<IConnectionsResponse>(
-        '/connections',
-      );
+    async function handleGetJobs() {
+      const responseJobs = await api.get<JobProps[]>('/jobs');
 
-      const { total } = connectionsResponse.data;
-
-      setTotalConnections(total);
+      setJobs(responseJobs.data);
     }
-    getTotalConnections();
+
+    handleGetJobs();
   }, []);
 
   return (
     <Container>
-      <TopBar>
-        <ProfileArea to="/profile">
-          <img
-            src="https://avatars0.githubusercontent.com/u/33403869?s=460&u=01d807797bdea2abc57e296b5eac9a45d3785cc0&v=4"
-            alt="Lucas Arena"
-          />
-          <span>Lucas Arena</span>
-        </ProfileArea>
-        <Logout to="/">
-          <FiPower size={20} color="#FFF" />
-        </Logout>
-      </TopBar>
+      <Header />
       <Content>
-        <LogoContainer>
-          <img src={logo} alt="Logo Proffy" />
-          <h1>Sua plataforma de estudo online</h1>
-        </LogoContainer>
-
-        <HeroImage
-          src={landing}
-          alt="Plataforma de estudos"
-          className="hero-image"
-        />
+        <JobList>
+          {jobs.length ? (
+            jobs.map((job) => (
+              <JobItem
+                id={job.id}
+                key={job.id}
+                company={job.company}
+                title={job.title}
+                description={job.description}
+              />
+            ))
+          ) : (
+              <NoResult>
+                <span>Nenhuma vaga cadastrada</span>
+              </NoResult>
+            )}
+        </JobList>
       </Content>
-      <Footer>
-        <section>
-          <WelcomeMessage>
-            Seja bem-vindo
-            <br />
-            <strong>O que deseja fazer?</strong>
-          </WelcomeMessage>
-          <ButtonsContainer>
-            <ButtonTypeChoose to="/teacher/list" classtype="study">
-              <img src={studyIcon} alt="Estudar" />
-              Estudar
-            </ButtonTypeChoose>
-            <ButtonTypeChoose to="/teacher/form" classtype="giveClasses">
-              <img src={giveClassesIcon} alt="Dar aula" />
-              Dar Aula
-            </ButtonTypeChoose>
-          </ButtonsContainer>
-          <TotalConnections>
-            {`Total de ${totalConnections} conexões realizadas`}
-            <br />
-            já realizadas
-            <img src={purpleHeartIcon} alt="Coração roxo" />
-          </TotalConnections>
-        </section>
-      </Footer>
     </Container>
   );
 };

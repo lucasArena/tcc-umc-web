@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 
@@ -24,29 +24,54 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Checkbox from '../../components/Checkbox';
 
-import api from '../../services/api';
+import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
+
+interface CredencialsProps {
+  email: string;
+  password: string;
+}
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { push } = useHistory();
+  const { signIn } = useAuth();
+  const { addToast } = useToast();
 
   const [passwordIcon, setPasswordIcon] = useState(showPasswordIcon);
   const [showPassword, setShowPassword] = useState(false);
   const [isFormInvalid, setIsFormInvalid] = useState(true);
 
-  const handleSignin = useCallback(async (data) => {
-    try {
-      const signInSchema = Yup.object().shape({
-        email: Yup.string().email().required(),
-        password: Yup.string().required(),
-      });
+  const handleSignin = useCallback(
+    async (data: CredencialsProps) => {
+      try {
+        const { email, password } = data;
 
-      await signInSchema.validate(data, {
-        abortEarly: true,
-      });
-    } catch (err) {
-      alert('ERRo');
-    }
-  }, []);
+        const signInSchema = Yup.object().shape({
+          email: Yup.string().email().required(),
+          password: Yup.string().required(),
+        });
+
+        await signInSchema.validate(data, {
+          abortEarly: true,
+        });
+
+        await signIn({
+          email,
+          password,
+        });
+
+        push('/profile');
+      } catch (err) {
+        addToast({
+          title: 'Erro',
+          description: 'Email/Senha inválida',
+          type: 'error',
+        });
+      }
+    },
+    [push, signIn, addToast],
+  );
 
   const handleShowPassword = useCallback(() => {
     if (showPassword) {

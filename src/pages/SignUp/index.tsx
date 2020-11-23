@@ -21,9 +21,14 @@ import backIcon from '../../assets/images/icons/back.svg';
 import Background from '../../components/Background';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Select from '../../components/Select';
+
+import api from '../../services/api';
+import { useToast } from '../../hooks/toast';
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { addToast } = useToast();
   const { push } = useHistory();
 
   const [passwordIcon, setPasswordIcon] = useState(showPasswordIcon);
@@ -33,27 +38,44 @@ const SignUp: React.FC = () => {
   const handleSignup = useCallback(
     async (data) => {
       try {
+        const { type, name, email, phone, password } = data;
+
         const signUpSchema = Yup.object().shape({
-          email: Yup.string().email().required(),
-          password: Yup.string().required(),
+          type: Yup.string().required('Tipo de usuário obrigatório'),
+          name: Yup.string().required('Nome de usuário obrigatório'),
+          phone: Yup.string().required('Telefone de usuário obrigatório'),
+          email: Yup.string().email().required('E-mail de usuário obrigatório'),
+          password: Yup.string().required('Senha de usuário obrigatório'),
         });
 
         await signUpSchema.validate(data, {
           abortEarly: true,
         });
 
-        push('/success', {
-          title: 'Cadastro concluído',
-          description:
-            'Agora você faz parte da plataforma da Proffy. Tenha uma ótima experiência.',
-          redirectTo: '/',
-          buttonText: 'Fazer login',
+        await api.post('/users', {
+          name,
+          phone,
+          email,
+          password,
+          type,
+        });
+
+        push('/');
+
+        addToast({
+          title: 'Successo',
+          description: 'Usuário criado com sucesso',
+          type: 'success',
         });
       } catch (err) {
-        alert('ERRo');
+        addToast({
+          title: 'Erro',
+          description: 'Erro ao tentar criar o usuário',
+          type: 'error',
+        });
       }
     },
-    [push],
+    [push, addToast],
   );
 
   const handleShowPassword = useCallback(() => {
@@ -70,10 +92,11 @@ const SignUp: React.FC = () => {
       const formData = formRef.current?.getData();
 
       const signUpSchema = Yup.object().shape({
-        name: Yup.string().required(),
-        surname: Yup.string().required(),
-        email: Yup.string().email().required(),
-        password: Yup.string().required(),
+        type: Yup.string().required('Tipo de usuário obrigatório'),
+        name: Yup.string().required('Nome de usuário obrigatório'),
+        phone: Yup.string().required('Telefone de usuário obrigatório'),
+        email: Yup.string().email().required('E-mail de usuário obrigatório'),
+        password: Yup.string().required('Senha de usuário obrigatório'),
       });
 
       await signUpSchema.validate(formData, {
@@ -107,6 +130,21 @@ const SignUp: React.FC = () => {
               <h1>Cadastro</h1>
               <h2>Preencha os dados abaixo para começar.</h2>
             </section>
+
+            {/* <Tabs>
+              <Tab selected>Sou usuário</Tab>
+              <Tab selected={false}>Sou Anunciante</Tab>
+            </Tabs> */}
+            <Select
+              name="type"
+              id="type"
+              width="100%"
+              placeholder="Selecione"
+              options={[
+                { value: 'A', label: 'Candidato' },
+                { value: 'C', label: 'Anunciante' },
+              ]}
+            />
             <Input
               width="100%"
               name="name"
@@ -115,8 +153,8 @@ const SignUp: React.FC = () => {
             />
             <Input
               width="100%"
-              name="surname"
-              placeholder="Sobrenome"
+              name="phone"
+              placeholder="Telefone"
               onKeyUp={validateForm}
             />
             <Input
@@ -133,6 +171,7 @@ const SignUp: React.FC = () => {
               iconAction={handleShowPassword}
               onKeyUp={validateForm}
             />
+
             <ButtonContainer>
               <Button disabled={isFormInvalid}>Concluir cadastro</Button>
             </ButtonContainer>

@@ -1,11 +1,11 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import ReactSelect, { Props, OptionTypeBase } from 'react-select';
 
 import { useField } from '@unform/core';
 import { Container } from './styles';
 
 interface SelectProps extends Props<OptionTypeBase> {
-  label: string;
+  label?: string;
   id?: string;
   name: string;
   width?: string;
@@ -23,24 +23,21 @@ const Select: React.FC<SelectProps> = ({
   const selectRef = useRef(null);
   const { fieldName, defaultValue, registerField } = useField(name);
 
+  const [selected, setSelected] = useState(defaultValue || '');
+
+  const handleSelect = useCallback((e) => {
+    return setSelected(e.value);
+  }, []);
+
+  useEffect(() => {
+    setSelected(defaultValue || '');
+  }, [defaultValue]);
+
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: selectRef.current,
-      getValue: (ref: any) => {
-        if (rest.isMulti) {
-          if (!ref.state.value) {
-            return [];
-          }
-          return ref.state.value.map((option: OptionTypeBase) => option.value);
-        }
-
-        if (!ref.state.value) {
-          return { label: '', value: '' };
-        }
-
-        return ref.state.value.value;
-      },
+      path: 'props.value.value',
     });
   }, [fieldName, registerField, rest.isMulti]);
 
@@ -49,10 +46,15 @@ const Select: React.FC<SelectProps> = ({
       <label htmlFor={id}>{label}</label>
 
       <ReactSelect
-        defaultValue={defaultValue}
+        value={
+          selected &&
+          options &&
+          options.find((option) => option.value === String(selected))
+        }
+        onChange={(e) => handleSelect(e)}
+        options={options}
         ref={selectRef}
         id={id}
-        options={options}
         styles={{
           control: (styles) => ({
             ...styles,

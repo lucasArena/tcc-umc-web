@@ -49,7 +49,7 @@ const InputMoney: React.FC<InputMoneyProps> = ({
         <input
           ref={inputRef}
           onChange={handleMask}
-          value={inputMoney}
+          defaultValue={inputMoney || defaultValue}
           {...rest}
         />
       </InputContainer>

@@ -6,6 +6,8 @@ interface ContainerTextAreaProps {
 
 export const Container = styled.div`
   position: relative;
+  flex: 1;
+
   label {
     color: ${(props) => props.theme.colors.textPrimary};
   }

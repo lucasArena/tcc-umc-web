@@ -11,7 +11,7 @@ import {
 import smileIcon from '../../assets/images/icons/smile.svg';
 
 import Header from '../../components/Header';
-import TeacherItem from '../../components/TeacherItem';
+// import TeacherItem from '../../components/TeacherItem';
 import InputMask from '../../components/InputMask';
 import Select from '../../components/Select';
 import api from '../../services/api';
@@ -44,13 +44,7 @@ const TeacherList: React.FC = () => {
 
   return (
     <Container>
-      <Header
-        pageName="Estudar"
-        contentStyle={{
-          minHeight: '250px',
-          justifyContent: 'center',
-        }}
-      >
+      <Header>
         <HeaderContent>
           <strong>Estes são os proffys disponíveis</strong>
           <aside>
@@ -101,7 +95,7 @@ const TeacherList: React.FC = () => {
         </Form>
       </Header>
 
-      <ListTeacher>
+      {/* <ListTeacher>
         {teachers.length ? (
           teachers.map((teacher) => (
             <TeacherItem
@@ -120,7 +114,7 @@ const TeacherList: React.FC = () => {
               <span>Nenhum professor encontrado com sua pesquisa.</span>
             </NoResult>
           )}
-      </ListTeacher>
+      </ListTeacher> */}
     </Container>
   );
 };

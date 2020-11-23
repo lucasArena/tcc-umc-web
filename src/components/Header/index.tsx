@@ -1,15 +1,9 @@
-import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
+import { FiPower } from 'react-icons/fi';
 
-import {
-  Container,
-  PageHeader,
-  TopbarContainer,
-  HeaderContent,
-} from './styles';
-
-import backIcon from '../../assets/images/icons/back.svg';
-import logoImg from '../../assets/images/logo.svg';
+import { Container, ProfileArea, Logout } from './styles';
+import { useAuth } from '../../hooks/auth';
 
 interface HeaderProps {
   pageName?: string;
@@ -17,29 +11,30 @@ interface HeaderProps {
   containerStyle?: object;
 }
 
-const Header: React.FC<HeaderProps> = ({
-  pageName,
-  contentStyle,
-  containerStyle,
-  children,
-}) => {
-  const { goBack } = useHistory();
+const Header: React.FC = () => {
+  const { push } = useHistory();
+  const { signOut } = useAuth();
+
+  const handleSignOut = useCallback(() => {
+    signOut();
+
+    push('/');
+  }, [push, signOut]);
 
   return (
     <Container>
-      <PageHeader style={containerStyle}>
-        <TopbarContainer>
-          <button type="button" onClick={goBack}>
-            <img src={backIcon} alt="Voltar" />
-          </button>
-          <h1>{pageName}</h1>
-          <Link to="/landing">
-            <img src={logoImg} alt="Proffy" />
-          </Link>
-        </TopbarContainer>
-
-        <HeaderContent style={contentStyle}>{children}</HeaderContent>
-      </PageHeader>
+      <menu>
+        <ProfileArea to="/profile">
+          <img
+            src="https://avatars0.githubusercontent.com/u/33403869?s=460&u=01d807797bdea2abc57e296b5eac9a45d3785cc0&v=4"
+            alt="Lucas Arena"
+          />
+          <span>Lucas Arena</span>
+        </ProfileArea>
+        <Logout to="/" onClick={handleSignOut}>
+          <FiPower size={20} color="#E6E6F0" />
+        </Logout>
+      </menu>
     </Container>
   );
 };

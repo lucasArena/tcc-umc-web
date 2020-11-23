@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d59fd62d-9100-44d0-bc1b-3a65ab09febd" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/InputMask/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/InputMask/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/InputMoney/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/InputMoney/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Select/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Select/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Landing/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Landing/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Landing/styles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Landing/styles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Profile/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Profile/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/SignIn/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignIn/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/SignUp/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignUp/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.tsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1jb78KLgIkZctt70i6jiLugqDk1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../api" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d59fd62d-9100-44d0-bc1b-3a65ab09febd" name="Default Changelist" comment="" />
+      <created>1604060777227</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1604060777227</updated>
+      <workItem from="1604060778362" duration="17000" />
+      <workItem from="1605213212270" duration="543000" />
+      <workItem from="1606066482781" duration="98000" />
+      <workItem from="1606068023194" duration="7000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="770" y="310" width="424" height="484" key="FileChooserDialogImpl" timestamp="1606068028802">
+      <screen x="55" y="27" width="1865" height="1053" />
+    </state>
+    <state x="770" y="310" width="424" height="484" key="FileChooserDialogImpl/55.27.1865.1053@55.27.1865.1053" timestamp="1606068028802" />
+  </component>
+</project>

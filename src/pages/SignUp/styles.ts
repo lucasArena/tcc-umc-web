@@ -1,5 +1,9 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Form } from '@unform/web';
+
+interface TabProps {
+  selected: boolean;
+}
 
 export const Container = styled.div`
   width: 100vw;
@@ -60,6 +64,26 @@ export const FormContent = styled.div`
   width: 100%;
   height: 100vh;
 `;
+
+// export const Tabs = styled.section`
+//   display: flex;
+//   width: 100%;
+// `;
+
+// export const Tab = styled.button<TabProps>`
+//   border: 0;
+//   margin-top: 4rem;
+
+//   ${(props) =>
+//     props.selected &&
+//     css`
+//       border-bottom: 2px solid ${props.theme.colors.primary};
+//     `}
+
+//   & + button {
+//     margin-left: 2rem;
+//   }
+// `;
 
 export const FormSignup = styled(Form)`
   width: 100%;

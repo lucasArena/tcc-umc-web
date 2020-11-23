@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { lighten } from 'polished';
 import { Form as UnformForm } from '@unform/web';
+
+import backgroundThings from '../../assets/images/background-things.svg';
 
 export const Container = styled.div`
   width: 100vw;
@@ -32,8 +33,11 @@ export const ProfileInfo = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
+  background: ${(props) => props.theme.colors.primary};
+  background-image: url('${backgroundThings}');
 
-  h2 {
+  padding: 4rem 0;
+  background-image: h2 {
     font-family: Archivo;
     font-weight: bold;
     font-size: 36px;
@@ -41,6 +45,10 @@ export const ProfileInfo = styled.div`
     text-align: center;
     color: ${(props) => props.theme.colors.boxBase};
     margin-top: 32px;
+  }
+
+  h2 {
+    color: ${(props) => props.theme.colors.lineWhite};
   }
 
   span {
@@ -201,21 +209,6 @@ export const Form = styled(UnformForm)`
       button {
         width: 20rem;
         margin-top: 0;
-      }
-    }
-  }
-`;
-
-export const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  @media (min-width: 700px) {
-    flex-direction: row;
-
-    > section {
-      & + section {
-        margin-left: 3.2rem;
       }
     }
   }

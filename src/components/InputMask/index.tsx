@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import ReactInputMask, { Props as InputMaskProps } from 'react-input-mask';
 import { useField } from '@unform/core';
 
@@ -23,17 +23,27 @@ const InputMask: React.FC<InputProps> = ({
   const inputMaskRef = useRef(null);
   const { defaultValue, fieldName, error, registerField } = useField(name);
 
+  const [mask, setMask] = useState(defaultValue || '');
+
+  const handleMask = useCallback((e) => {
+    const { value } = e.target;
+    return setMask(value);
+  }, []);
+
+  useEffect(() => {
+    setMask(defaultValue || '');
+  }, [defaultValue]);
+
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: inputMaskRef.current,
       path: 'value',
-      setValue(ref: any, value: string) {
-        ref.setInputValue(value);
+      clearValue: (pickerRef) => {
+        pickerRef.setInputValue(null);
       },
     });
-  }, [fieldName, registerField]);
-
+  }, [registerField, fieldName]);
   return (
     <Container width={width}>
       <label htmlFor={id}>{label}</label>
@@ -42,7 +52,8 @@ const InputMask: React.FC<InputProps> = ({
           ref={inputMaskRef}
           name={name}
           id={id}
-          defaultValue={defaultValue}
+          value={mask}
+          onChange={(e) => handleMask(e)}
           {...rest}
         />
       </InputContainer>

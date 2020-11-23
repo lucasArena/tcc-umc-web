@@ -157,25 +157,7 @@ const TeacherForm: React.FC = () => {
 
   return (
     <Container>
-      <Header
-        pageName="Dar aulas"
-        containerStyle={{
-          height: '360px',
-        }}
-      >
-        <HeaderContent>
-          <strong>Que incrível que você quer dar aula</strong>
-          <p>O primeiro passo é preencher esse formulário de inscrição</p>
-          <aside>
-            <img src={rocketIcon} alt="Imagem auxiliar" />
-            <span>
-              <span>Preparare-se!</span>
-              <br />
-              <span>vai ser o máximo.</span>
-            </span>
-          </aside>
-        </HeaderContent>
-      </Header>
+      <Header />
       <Form onSubmit={handleSubmit} ref={formRef}>
         <fieldset>
           <legend>Seus dados</legend>
