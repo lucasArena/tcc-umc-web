@@ -14,7 +14,7 @@ interface JobProps {
   company: {
     trade_name: string;
     profile: {
-      avatar: string;
+      avatar_url: string;
     };
   };
 }

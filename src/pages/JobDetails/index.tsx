@@ -31,7 +31,7 @@ interface JobProps {
   company: {
     trade_name: string;
     profile: {
-      avatar?: string;
+      avatar_url?: string;
     };
   };
   job_types: {
@@ -55,7 +55,7 @@ const JobDetails: React.FC = () => {
       company: {
         trade_name: '',
         profile: {
-          avatar: undefined,
+          avatar_url: undefined,
         },
       },
       job_types: {
@@ -85,7 +85,7 @@ const JobDetails: React.FC = () => {
         type: 'error',
       });
     }
-  }, [user.profile.id, job.id, push, addToast]);
+  }, [user.id, job.id, push, addToast]);
 
   const createdDateJobFormatted = useMemo(() => {
     if (!job.created_at) {
@@ -116,7 +116,7 @@ const JobDetails: React.FC = () => {
             src={
               (job.company &&
                 job.company.profile &&
-                job.company.profile.avatar) ||
+                job.company.profile.avatar_url) ||
               'https://images6.fanpop.com/image/photos/38200000/Spongebob-Icon-spongebob-squarepants-38211111-200-200.jpg'
             }
             alt="Lucas Arena"

@@ -213,3 +213,41 @@ export const Form = styled(UnformForm)`
     }
   }
 `;
+
+export const UploadResumeContainer = styled.section`
+  label {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    flex: 1;
+    border: 0;
+    border-radius: 8px;
+    padding: 16px;
+    outline: 0;
+
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 26px;
+    background: ${(props) => props.theme.colors.secundary};
+    transition: background 0.4s;
+
+    span {
+      margin-right: 10px;
+      color: ${(props) => props.theme.colors.boxBase};
+    }
+
+    svg {
+      color: ${(props) => props.theme.colors.boxBase};
+    }
+
+    &:hover {
+      background: ${(props) => props.theme.colors.secundaryDark};
+    }
+
+    input {
+      display: none;
+    }
+  }
+`;

@@ -10,7 +10,7 @@ interface JobItemProps {
   company: {
     trade_name: string;
     profile: {
-      avatar: string;
+      avatar_url: string;
     };
   };
 }
@@ -33,7 +33,7 @@ const JobItem: React.FC<JobItemProps> = ({
       <header>
         <img
           src={
-            (company.profile && company.profile.avatar) ||
+            (company.profile && company.profile.avatar_url) ||
             'https://images6.fanpop.com/image/photos/38200000/Spongebob-Icon-spongebob-squarepants-38211111-200-200.jpg'
           }
           alt={company.trade_name}

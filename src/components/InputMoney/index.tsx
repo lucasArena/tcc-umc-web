@@ -19,6 +19,7 @@ const InputMoney: React.FC<InputMoneyProps> = ({
   prefix,
   name,
   label,
+  width,
   ...rest
 }) => {
   const inputRef = useRef(null);
@@ -42,7 +43,7 @@ const InputMoney: React.FC<InputMoneyProps> = ({
     });
   }, [registerField, fieldName]);
   return (
-    <Container>
+    <Container style={{ width }}>
       <label>{label}</label>
       <InputContainer error={!!error}>
         {prefix && <span>{prefix}</span>}

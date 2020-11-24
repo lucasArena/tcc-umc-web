@@ -42,7 +42,6 @@ export const ProfileInfo = styled.div`
 
 export const AvatarContainer = styled.div`
   position: relative;
-  cursor: pointer;
 
   img {
     width: 18rem;

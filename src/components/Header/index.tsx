@@ -13,7 +13,7 @@ interface HeaderProps {
 
 const Header: React.FC = () => {
   const { push } = useHistory();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
 
   const handleSignOut = useCallback(() => {
     signOut();
@@ -26,10 +26,13 @@ const Header: React.FC = () => {
       <menu>
         <ProfileArea to="/profile">
           <img
-            src="https://avatars0.githubusercontent.com/u/33403869?s=460&u=01d807797bdea2abc57e296b5eac9a45d3785cc0&v=4"
-            alt="Lucas Arena"
+            src={
+              user.avatar_url ||
+              'https://avatars0.githubusercontent.com/u/33403869?s=460&u=01d807797bdea2abc57e296b5eac9a45d3785cc0&v=4'
+            }
+            alt={user.name}
           />
-          <span>Lucas Arena</span>
+          <span>{user.name}</span>
         </ProfileArea>
         <Logout to="/" onClick={handleSignOut}>
           <FiPower size={20} color="#E6E6F0" />

@@ -3,16 +3,23 @@ import React, {
   useState,
   useRef,
   useEffect,
-  useMemo,
+  ChangeEvent,
 } from 'react';
-
-import { FiCamera } from 'react-icons/fi';
+import { FiCamera, FiUpload } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { cpf as cpfValidator } from 'cpf-cnpj-validator';
 import * as Yup from 'yup';
+import { PDFViewer } from '@react-pdf/renderer';
+import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 
 import { parseISO, isValid, format } from 'date-fns';
-import { Container, ProfileInfo, AvatarContainer, Form } from './styles';
+import {
+  Container,
+  ProfileInfo,
+  AvatarContainer,
+  Form,
+  UploadResumeContainer,
+} from './styles';
 
 import warningIcon from '../../assets/images/icons/warning.svg';
 
@@ -33,7 +40,7 @@ import { useToast } from '../../hooks/toast';
 interface FormProps {
   name: string;
   email: string;
-  avatar: string;
+  avatar_url: string;
   born: string;
   cpf: string;
   country_id: string;
@@ -42,6 +49,7 @@ interface FormProps {
   salary_expectations: string;
   contract: string;
   gender: string;
+  resume_url: string;
 }
 
 const Profile: React.FC = () => {
@@ -49,7 +57,7 @@ const Profile: React.FC = () => {
   const { addToast } = useToast();
   const { user, updateUser } = useAuth();
 
-  const [id, setId] = useState(user.id);
+  const [id] = useState(user.id);
   const [userData, setUserData] = useState<FormProps>({} as FormProps);
 
   const handleSubmit = useCallback(
@@ -95,19 +103,21 @@ const Profile: React.FC = () => {
             },
           ),
           cpf: Yup.string()
-            .test('cpf_validate', 'check_if_cpf_is_valid', function isValidCPF(
-              checkCPF,
-            ) {
-              if (!checkCPF) {
-                return false;
-              }
+            .test(
+              'cpf_validate',
+              'check_if_cpf_is_valid',
+              function isValidCPF(checkCPF) {
+                if (!checkCPF) {
+                  return false;
+                }
 
-              if (!cpfValidator.isValid(checkCPF)) {
-                return false;
-              }
+                if (!cpfValidator.isValid(checkCPF)) {
+                  return false;
+                }
 
-              return true;
-            })
+                return true;
+              },
+            )
             .required('CPF obrigatório'),
           civil_state: Yup.string().required('Estado cívil obrigatória'),
           country_id: Yup.string().required('Nacionalidade obrigatória'),
@@ -169,7 +179,7 @@ const Profile: React.FC = () => {
       const {
         name,
         email,
-        avatar,
+        avatar_url,
         profile: {
           gender,
           country_id,
@@ -179,13 +189,14 @@ const Profile: React.FC = () => {
           civil_state,
           salary_expectations,
           contract,
+          resume_url,
         },
       } = userInfo;
 
       setUserData({
         name,
         email,
-        avatar,
+        avatar_url,
         country_id,
         gender,
         cpf,
@@ -194,6 +205,7 @@ const Profile: React.FC = () => {
         civil_state,
         salary_expectations,
         contract,
+        resume_url,
       });
     } catch (err) {
       console.log(err);
@@ -205,6 +217,46 @@ const Profile: React.FC = () => {
     }
   }, [id, addToast]);
 
+  const handleAvatarUpdate = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const formAvatar = new FormData();
+
+        formAvatar.append('image', e.target.files[0]);
+
+        const response = await api.post(`/avatar/${id}`, formAvatar);
+
+        updateUser(response.data);
+
+        addToast({
+          type: 'success',
+          title: 'Avatar atualizado!',
+        });
+      }
+    },
+    [id, updateUser, addToast],
+  );
+
+  const handleUpdateResume = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const resumeFormData = new FormData();
+
+        resumeFormData.append('image', e.target.files[0]);
+
+        const response = await api.post(`/users/${id}/resume`, resumeFormData);
+
+        updateUser(response.data);
+
+        addToast({
+          type: 'success',
+          title: 'Currículo atualizado com sucesso',
+        });
+      }
+    },
+    [id],
+  );
+
   useEffect(() => {
     handleGetUser();
   }, []);
@@ -215,17 +267,20 @@ const Profile: React.FC = () => {
 
       <ProfileInfo>
         <AvatarContainer htmlFor="avatar">
+          <input type="file" id="avatar" onChange={handleAvatarUpdate} />
           <img
-            src="https://avatars0.githubusercontent.com/u/33403869?s=460&u=01d807797bdea2abc57e296b5eac9a45d3785cc0&v=4"
-            alt="Lucas Arena"
+            src={
+              user.avatar_url ||
+              'https://avatars0.githubusercontent.com/u/33403869?s=460&u=01d807797bdea2abc57e296b5eac9a45d3785cc0&v=4'
+            }
+            alt={user.name}
           />
           <div>
             <FiCamera />
           </div>
-          <input type="file" id="avatar" />
         </AvatarContainer>
 
-        <h2>{userData.name}</h2>
+        <h2>{user.name}</h2>
       </ProfileInfo>
       <Form onSubmit={handleSubmit} ref={formRef} initialData={userData}>
         <fieldset>
@@ -294,6 +349,7 @@ const Profile: React.FC = () => {
               label="Pretensão salarial"
               id="salary_expectations"
               name="salary_expectations"
+              width="50%"
             />
 
             <Select
@@ -301,20 +357,46 @@ const Profile: React.FC = () => {
               id="contract"
               name="contract"
               placeholder="Selecione"
+              width="50%"
               options={[
                 { value: 'CLT', label: 'CLT' },
                 { value: 'PJ', label: 'PJ' },
               ]}
             />
-            <InputFile
+          </InputGroup>
+        </fieldset>
+
+        <fieldset>
+          <legend>Curriculo</legend>
+          {/* <PDFViewer> */}
+          <InputGroup>
+            <UploadResumeContainer>
+              <label htmlFor="resume">
+                <span>Upload do currículo</span>
+                <FiUpload />
+                <input
+                  type="file"
+                  id="resume"
+                  accept="application/pdf,application/vnd.ms-excel"
+                  onChange={handleUpdateResume}
+                />
+              </label>
+            </UploadResumeContainer>
+            {/* <InputFile
               imageAlt="Upload do currículo"
               id="resume"
               name="resume"
               description="Coloque seu currículo"
-            />
+            /> */}
           </InputGroup>
-        </fieldset>
 
+          <InputGroup>
+            <Document file={user.profile.resume_url}>
+              <Page width={620} pageNumber={1} />
+            </Document>
+          </InputGroup>
+          {/* </PDFViewer> */}
+        </fieldset>
         <footer>
           <p>
             <img src={warningIcon} alt="Aviso importante" />
