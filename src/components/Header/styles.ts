@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { darken } from 'polished';
 
 export const Container = styled.div`
   display: flex;
@@ -39,6 +40,27 @@ export const ProfileArea = styled(Link)`
     height: 40px;
     border-radius: 50%;
     margin-right: 1rem;
+  }
+`;
+
+export const Right = styled.section`
+  display: flex;
+
+  a {
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 2rem;
+    border: 0;
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    font-size: 1.5rem;
+    background: ${(props) => props.theme.colors.primaryDarker};
+    color: ${(props) => props.theme.colors.buttonText};
+    transition: background 0.4s;
+
+    &:hover {
+      background: ${(props) => darken(0.04, props.theme.colors.primaryDarker)};
+    }
   }
 `;
 

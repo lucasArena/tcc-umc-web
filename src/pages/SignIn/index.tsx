@@ -61,7 +61,7 @@ const SignIn: React.FC = () => {
           password,
         });
 
-        push('/profile');
+        push('/landing');
       } catch (err) {
         addToast({
           title: 'Erro',

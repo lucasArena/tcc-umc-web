@@ -9,33 +9,28 @@ import { FiCamera, FiUpload } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { cpf as cpfValidator } from 'cpf-cnpj-validator';
 import * as Yup from 'yup';
-import { PDFViewer } from '@react-pdf/renderer';
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 
 import { parseISO, isValid, format } from 'date-fns';
 import {
-  Container,
   ProfileInfo,
   AvatarContainer,
   Form,
   UploadResumeContainer,
 } from './styles';
 
-import warningIcon from '../../assets/images/icons/warning.svg';
+import warningIcon from '../../../assets/images/icons/warning.svg';
 
-import Header from '../../components/Header';
+import InputGroup from '../../../components/InputGroup';
+import Input from '../../../components/Input';
+import Textarea from '../../../components/TextArea';
+import Select from '../../../components/Select';
+import api from '../../../services/api';
+import InputMask from '../../../components/InputMask';
+import InputMoney from '../../../components/InputMoney';
 
-import InputGroup from '../../components/InputGroup';
-import Input from '../../components/Input';
-import InputFile from '../../components/InputFile';
-import Textarea from '../../components/TextArea';
-import Select from '../../components/Select';
-import api from '../../services/api';
-import InputMask from '../../components/InputMask';
-import InputMoney from '../../components/InputMoney';
-
-import { useAuth } from '../../hooks/auth';
-import { useToast } from '../../hooks/toast';
+import { useAuth } from '../../../hooks/auth';
+import { useToast } from '../../../hooks/toast';
 
 interface FormProps {
   name: string;
@@ -254,7 +249,7 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [id],
+    [id, addToast, updateUser],
   );
 
   useEffect(() => {
@@ -262,9 +257,7 @@ const Profile: React.FC = () => {
   }, []);
 
   return (
-    <Container>
-      <Header />
-
+    <>
       <ProfileInfo>
         <AvatarContainer htmlFor="avatar">
           <input type="file" id="avatar" onChange={handleAvatarUpdate} />
@@ -382,12 +375,6 @@ const Profile: React.FC = () => {
                 />
               </label>
             </UploadResumeContainer>
-            {/* <InputFile
-              imageAlt="Upload do currículo"
-              id="resume"
-              name="resume"
-              description="Coloque seu currículo"
-            /> */}
           </InputGroup>
 
           <InputGroup>
@@ -407,7 +394,7 @@ const Profile: React.FC = () => {
           <button type="submit">Atualizar</button>
         </footer>
       </Form>
-    </Container>
+    </>
   );
 };
 

@@ -1,8 +1,4 @@
-import styled, { css } from 'styled-components';
-
-interface ClassesListItemProps {
-  disabled?: boolean;
-}
+import styled from 'styled-components';
 
 export const Container = styled.article`
   background: ${(props) => props.theme.colors.boxBase};

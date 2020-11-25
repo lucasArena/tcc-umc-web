@@ -1,9 +1,9 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Form } from '@unform/web';
 
-interface TabProps {
-  selected: boolean;
-}
+// interface TabProps {
+//   selected: boolean;
+// }
 
 export const Container = styled.div`
   width: 100vw;

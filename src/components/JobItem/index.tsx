@@ -40,7 +40,6 @@ const JobItem: React.FC<JobItemProps> = ({
         />
         <div>
           <strong>{title}</strong>
-          {/* <span>{description}</span> */}
         </div>
       </header>
 

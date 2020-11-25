@@ -1,30 +1,10 @@
 import styled from 'styled-components';
 import { Form as UnformForm } from '@unform/web';
 
-import backgroundThings from '../../assets/images/background-things.svg';
-
 export const Container = styled.div`
   width: 100vw;
   height: 100vh;
   background: ${(props) => props.theme.colors.background};
-
-  > div {
-    header {
-      section {
-        margin-bottom: 6.4rem;
-      }
-    }
-  }
-
-  @media (min-width: 700px) {
-    > div {
-      header {
-        section {
-          margin-bottom: 0;
-        }
-      }
-    }
-  }
 `;
 
 export const ProfileInfo = styled.div`
@@ -33,8 +13,6 @@ export const ProfileInfo = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background: ${(props) => props.theme.colors.primary};
-  background-image: url('${backgroundThings}');
 
   padding: 4rem 0;
   background-image: h2 {
@@ -48,7 +26,7 @@ export const ProfileInfo = styled.div`
   }
 
   h2 {
-    color: ${(props) => props.theme.colors.lineWhite};
+    color: ${(props) => props.theme.colors.primary};
   }
 
   span {
@@ -62,43 +40,11 @@ export const ProfileInfo = styled.div`
 
 export const AvatarContainer = styled.label`
   position: relative;
-  cursor: pointer;
 
   img {
     width: 18rem;
     height: 18rem;
     border-radius: 50%;
-  }
-
-  input {
-    display: none;
-  }
-
-  div {
-    position: absolute;
-    right: 0px;
-    width: 48px;
-    height: 48px;
-    bottom: 0;
-    border: 0;
-    padding: 2px;
-    background: ${(props) => props.theme.colors.secundary};
-    border-radius: 50%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background 0.2s;
-
-    &:hover {
-      background: ${(props) => props.theme.colors.secundaryDark};
-    }
-
-    svg {
-      width: 18px;
-      height: 18px;
-      color: ${(props) => props.theme.colors.boxBase};
-    }
   }
 `;
 

@@ -1,15 +1,9 @@
-import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useCallback, useMemo } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { FiPower } from 'react-icons/fi';
 
-import { Container, ProfileArea, Logout } from './styles';
+import { Container, ProfileArea, Right, Logout } from './styles';
 import { useAuth } from '../../hooks/auth';
-
-interface HeaderProps {
-  pageName?: string;
-  contentStyle?: object;
-  containerStyle?: object;
-}
 
 const Header: React.FC = () => {
   const { push } = useHistory();
@@ -21,10 +15,20 @@ const Header: React.FC = () => {
     push('/');
   }, [push, signOut]);
 
+  const linkProfile = useMemo(() => {
+    return user.profile_type === 'App\\Applicant'
+      ? '/profile/applicant'
+      : '/profile/company';
+  }, [user]);
+
+  const isCompany = useMemo(() => {
+    return user.profile_type === 'App\\Company';
+  }, [user]);
+
   return (
     <Container>
       <menu>
-        <ProfileArea to="/profile">
+        <ProfileArea to={linkProfile}>
           <img
             src={
               user.avatar_url ||
@@ -34,9 +38,13 @@ const Header: React.FC = () => {
           />
           <span>{user.name}</span>
         </ProfileArea>
-        <Logout to="/" onClick={handleSignOut}>
-          <FiPower size={20} color="#E6E6F0" />
-        </Logout>
+
+        <Right>
+          {isCompany && <Link to="/company/landing">Área do anunciante</Link>}
+          <Logout to="/" onClick={handleSignOut}>
+            <FiPower size={20} color="#E6E6F0" />
+          </Logout>
+        </Right>
       </menu>
     </Container>
   );

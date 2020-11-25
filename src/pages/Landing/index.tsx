@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import { useHistory } from 'react-router-dom';
-import { Container, Content, JobList, NoResult } from './styles';
+import { Content, JobList, NoResult } from './styles';
 
 import api from '../../services/api';
 import JobItem from '../../components/JobItem';
-import Header from '../../components/Header';
 
 interface JobProps {
   id: number;
@@ -33,28 +31,25 @@ const Landing: React.FC = () => {
   }, []);
 
   return (
-    <Container>
-      <Header />
-      <Content>
-        <JobList>
-          {jobs.length ? (
-            jobs.map((job) => (
-              <JobItem
-                id={job.id}
-                key={job.id}
-                company={job.company}
-                title={job.title}
-                description={job.description}
-              />
-            ))
-          ) : (
-              <NoResult>
-                <span>Nenhuma vaga cadastrada</span>
-              </NoResult>
-            )}
-        </JobList>
-      </Content>
-    </Container>
+    <Content>
+      <JobList>
+        {jobs.length ? (
+          jobs.map((job) => (
+            <JobItem
+              id={job.id}
+              key={job.id}
+              company={job.company}
+              title={job.title}
+              description={job.description}
+            />
+          ))
+        ) : (
+            <NoResult>
+              <span>Nenhuma vaga cadastrada</span>
+            </NoResult>
+          )}
+      </JobList>
+    </Content>
   );
 };
 

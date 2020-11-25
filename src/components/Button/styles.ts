@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 interface ButtonProps {
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 export const Container = styled.div<ButtonProps>`
