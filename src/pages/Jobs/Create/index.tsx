@@ -30,7 +30,6 @@ const Profile: React.FC = () => {
   const { push } = useHistory();
   const { user } = useAuth();
 
-  const [id] = useState(user.id);
   const [userData] = useState<FormProps>({} as FormProps);
 
   const handleSubmit = useCallback(

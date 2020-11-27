@@ -31,8 +31,9 @@ const Header: React.FC = () => {
         <ProfileArea to={linkProfile}>
           <img
             src={
-              user.avatar_url ||
-              'https://avatars0.githubusercontent.com/u/33403869?s=460&u=01d807797bdea2abc57e296b5eac9a45d3785cc0&v=4'
+              user.avatar
+                ? user.avatar_url
+                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
             }
             alt={user.name}
           />

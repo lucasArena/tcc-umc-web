@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { parseISO, format } from 'date-fns';
 
-import Header from '../../components/Header';
 import Button from '../../components/Button';
 
 import {
@@ -37,6 +36,9 @@ interface JobProps {
   job_types: {
     name: string;
   };
+  applications: {
+    user_id: number;
+  }[];
 }
 
 const JobDetails: React.FC = () => {
@@ -61,6 +63,7 @@ const JobDetails: React.FC = () => {
       job_types: {
         name: '',
       },
+      applications: [],
     };
   });
 
@@ -97,6 +100,16 @@ const JobDetails: React.FC = () => {
     return dateFormatted;
   }, [job.created_at]);
 
+  const applicationCreated = useMemo(() => {
+    if (job) {
+      const userApplication = job.applications.find(
+        (application) => application.user_id === user.id,
+      );
+
+      return !!userApplication;
+    }
+  }, [job, user]);
+
   useEffect(() => {
     async function handleGetJob() {
       const responseJob = await api.get(`/jobs/${jobId}`);
@@ -109,7 +122,6 @@ const JobDetails: React.FC = () => {
 
   return (
     <Container>
-      <Header />
       <ProfileInfo>
         <AvatarContainer>
           <img
@@ -143,8 +155,8 @@ const JobDetails: React.FC = () => {
             </div>
           </Main>
           <Aside>
-            <Button onClick={handleAplicattion} disabled={false}>
-              Candidatar-se
+            <Button onClick={handleAplicattion} disabled={applicationCreated}>
+              {applicationCreated ? 'Candidatado' : 'Candidatar-se'}
             </Button>
           </Aside>
         </Content>

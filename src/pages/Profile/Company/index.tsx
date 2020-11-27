@@ -108,36 +108,6 @@ const Profile: React.FC = () => {
     [id, addToast, updateUser],
   );
 
-  const handleGetUser = useCallback(async () => {
-    try {
-      const responseUserData = await api.get(`/users/${id}`);
-
-      const userInfo = responseUserData.data;
-
-      const {
-        name,
-        email,
-        avatar_url,
-        profile: { trade_name, cnpj },
-      } = userInfo;
-
-      setUserData({
-        name,
-        email,
-        avatar_url,
-        trade_name,
-        cnpj,
-      });
-    } catch (err) {
-      console.log(err);
-      addToast({
-        title: 'Erro',
-        description: 'Erro ao tentar resgatar os dados do usuário',
-        type: 'error',
-      });
-    }
-  }, [id, addToast]);
-
   const handleAvatarUpdate = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
@@ -159,8 +129,38 @@ const Profile: React.FC = () => {
   );
 
   useEffect(() => {
+    async function handleGetUser() {
+      try {
+        const responseUserData = await api.get(`/users/${id}`);
+
+        const userInfo = responseUserData.data;
+
+        const {
+          name,
+          email,
+          avatar_url,
+          profile: { trade_name, cnpj },
+        } = userInfo;
+
+        setUserData({
+          name,
+          email,
+          avatar_url,
+          trade_name,
+          cnpj,
+        });
+      } catch (err) {
+        console.log(err);
+        addToast({
+          title: 'Erro',
+          description: 'Erro ao tentar resgatar os dados do usuário',
+          type: 'error',
+        });
+      }
+    }
+
     handleGetUser();
-  }, []);
+  }, [addToast, id]);
 
   return (
     <Container>
@@ -169,8 +169,9 @@ const Profile: React.FC = () => {
           <input type="file" id="avatar" onChange={handleAvatarUpdate} />
           <img
             src={
-              user.avatar_url ||
-              'https://avatars0.githubusercontent.com/u/33403869?s=460&u=01d807797bdea2abc57e296b5eac9a45d3785cc0&v=4'
+              user.avatar
+                ? user.avatar_url
+                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
             }
             alt={user.name}
           />

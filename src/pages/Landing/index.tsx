@@ -22,7 +22,7 @@ const Landing: React.FC = () => {
 
   useEffect(() => {
     async function handleGetJobs() {
-      const responseJobs = await api.get<JobProps[]>('/jobs');
+      const responseJobs = await api.get<JobProps[]>('/jobs/available');
 
       setJobs(responseJobs.data);
     }

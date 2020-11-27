@@ -165,53 +165,6 @@ const Profile: React.FC = () => {
     [id, addToast, updateUser],
   );
 
-  const handleGetUser = useCallback(async () => {
-    try {
-      const responseUserData = await api.get(`/users/${id}`);
-
-      const userInfo = responseUserData.data;
-
-      const {
-        name,
-        email,
-        avatar_url,
-        profile: {
-          gender,
-          country_id,
-          cpf,
-          born,
-          bio,
-          civil_state,
-          salary_expectations,
-          contract,
-          resume_url,
-        },
-      } = userInfo;
-
-      setUserData({
-        name,
-        email,
-        avatar_url,
-        country_id,
-        gender,
-        cpf,
-        born: born && format(parseISO(born), 'dd/M/Y'),
-        bio,
-        civil_state,
-        salary_expectations,
-        contract,
-        resume_url,
-      });
-    } catch (err) {
-      console.log(err);
-      addToast({
-        title: 'Erro',
-        description: 'Erro ao tentar resgatar os dados do usuário',
-        type: 'error',
-      });
-    }
-  }, [id, addToast]);
-
   const handleAvatarUpdate = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
@@ -253,9 +206,55 @@ const Profile: React.FC = () => {
   );
 
   useEffect(() => {
-    handleGetUser();
-  }, []);
+    async function handleGetUser() {
+      try {
+        const responseUserData = await api.get(`/users/${id}`);
 
+        const userInfo = responseUserData.data;
+
+        const {
+          name,
+          email,
+          avatar_url,
+          profile: {
+            gender,
+            country_id,
+            cpf,
+            born,
+            bio,
+            civil_state,
+            salary_expectations,
+            contract,
+            resume_url,
+          },
+        } = userInfo;
+
+        setUserData({
+          name,
+          email,
+          avatar_url,
+          country_id,
+          gender,
+          cpf,
+          born: born && format(parseISO(born), 'dd/M/Y'),
+          bio,
+          civil_state,
+          salary_expectations,
+          contract,
+          resume_url,
+        });
+      } catch (err) {
+        console.log(err);
+        addToast({
+          title: 'Erro',
+          description: 'Erro ao tentar resgatar os dados do usuário',
+          type: 'error',
+        });
+      }
+    }
+
+    handleGetUser();
+  }, [addToast, id]);
   return (
     <>
       <ProfileInfo>
@@ -263,8 +262,9 @@ const Profile: React.FC = () => {
           <input type="file" id="avatar" onChange={handleAvatarUpdate} />
           <img
             src={
-              user.avatar_url ||
-              'https://avatars0.githubusercontent.com/u/33403869?s=460&u=01d807797bdea2abc57e296b5eac9a45d3785cc0&v=4'
+              user.avatar
+                ? user.avatar_url
+                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
             }
             alt={user.name}
           />
@@ -361,7 +361,6 @@ const Profile: React.FC = () => {
 
         <fieldset>
           <legend>Curriculo</legend>
-          {/* <PDFViewer> */}
           <InputGroup>
             <UploadResumeContainer>
               <label htmlFor="resume">

@@ -2,9 +2,10 @@ import React, { createContext, useCallback, useContext, useState } from 'react';
 import api from '../services/api';
 
 interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
+  avatar: string;
   avatar_url?: string;
   profile_type: string;
   profile: {

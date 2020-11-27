@@ -147,6 +147,7 @@ export const ApplicantList = styled.footer`
 export const ApplicantInfo = styled.div`
   display: flex;
   align-items: center;
+  min-width: 60%;
 
   img {
     width: 50px;
@@ -158,6 +159,10 @@ export const ApplicantInfo = styled.div`
   h4 {
     color: ${(props) => props.theme.colors.primary};
     margin-right: 10px;
+  }
+
+  a {
+    margin-left: auto;
   }
 `;
 

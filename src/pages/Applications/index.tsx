@@ -39,7 +39,20 @@ interface JobProps {
         resume_url: string;
       };
     };
+    status: {
+      name: string;
+    };
   }[];
+}
+
+interface ApplicationProps {
+  job: {
+    available: number;
+  };
+  status: {
+    id: number;
+    name: string;
+  };
 }
 
 const Applications: React.FC = () => {
@@ -47,10 +60,39 @@ const Applications: React.FC = () => {
   const [jobs, setJobs] = useState<JobProps[]>([] as JobProps[]);
 
   const handleChangeStatusApplication = useCallback(
-    async (application_id: Number, status_id: Number) => {
-      await api.patch(`/applications/${application_id}`, {
-        status_id,
-      });
+    async (application_id: number, status_id: number) => {
+      const response = await api.patch<ApplicationProps>(
+        `/applications/${application_id}`,
+        {
+          status_id,
+        },
+      );
+
+      const statusApplication = response.data.status;
+      const availablePositions = response.data.job.available;
+
+      setJobs((oldJobs) =>
+        oldJobs.map((oldJob) => {
+          const applicationsModified = oldJob.applications.map(
+            (oldApplication) => {
+              if (application_id === oldApplication.id) {
+                return {
+                  ...oldApplication,
+                  status_id: statusApplication.id,
+                  status: statusApplication,
+                };
+              }
+              return oldApplication;
+            },
+          );
+
+          return {
+            ...oldJob,
+            available: availablePositions,
+            applications: applicationsModified,
+          };
+        }),
+      );
     },
     [],
   );
@@ -106,13 +148,14 @@ const Applications: React.FC = () => {
                       </Link>
                     </ApplicantInfo>
                     {application.status_id !== 1 ? (
-                      <h5>Aprovado</h5>
+                      <h5>{application.status.name}</h5>
                     ) : (
                         <ApplicantActions>
                           <Button
                             type="button"
                             onClick={() =>
-                              handleChangeStatusApplication(application.id, 2)}
+                              handleChangeStatusApplication(application.id, 2)
+                            }
                             style={{ background: '#e33d3d' }}
                           >
                             Reprovar
@@ -120,7 +163,8 @@ const Applications: React.FC = () => {
                           <Button
                             type="button"
                             onClick={() =>
-                              handleChangeStatusApplication(application.id, 3)}
+                              handleChangeStatusApplication(application.id, 3)
+                            }
                           >
                             Aprovar
                         </Button>

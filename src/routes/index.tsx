@@ -17,6 +17,7 @@ import CompanyJobsCreate from '../pages/Jobs/Create';
 import CompanyJobsUpdate from '../pages/Jobs/Update';
 
 import CompanyApplications from '../pages/Applications';
+import CompanyLanding from '../pages/CompanyLanding';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -27,7 +28,12 @@ const Routes: React.FC = () => (
     <Route path="/profile/company" component={ProfileCompany} isPrivate />
     <Route path="/landing" component={Landing} isPrivate />
     <Route path="/jobDetails" component={JobDetails} isPrivate />
-    <Route path="/company/landing" component={Landing} isPrivate isCompany />
+    <Route
+      path="/company/landing"
+      component={CompanyLanding}
+      isPrivate
+      isCompany
+    />
     <Route path="/company/jobs" component={CompanyJobs} isPrivate isCompany />
     <Route
       path="/company/job/create"

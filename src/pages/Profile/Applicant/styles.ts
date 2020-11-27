@@ -86,7 +86,6 @@ export const Form = styled(UnformForm)`
   border-radius: 0.8rem;
   margin: -3.2rem auto 3.2rem;
   padding-top: 6.4rem;
-  overflow: hidden;
 
   > fieldset {
     border: 0;
