@@ -13,7 +13,7 @@ import {
   ButtonContainer,
 } from './styles';
 
-import logo from '../../assets/images/logo.svg';
+import logo from '../../assets/images/logo.png';
 import showPasswordIcon from '../../assets/images/icons/show-password.svg';
 import hidePasswordIcon from '../../assets/images/icons/hide-password.svg';
 import backIcon from '../../assets/images/icons/back.svg';
@@ -181,7 +181,7 @@ const SignUp: React.FC = () => {
       <Background>
         <LogoContainer>
           <img src={logo} alt="Logo Proffy" />
-          <h1>Sua plataforma de estudo online</h1>
+          <h1>Sua plataforma de vagas online</h1>
         </LogoContainer>
       </Background>
     </Container>

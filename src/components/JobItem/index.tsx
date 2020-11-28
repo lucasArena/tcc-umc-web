@@ -7,6 +7,7 @@ interface JobItemProps {
   id: number;
   title: string;
   description: string;
+  available: number;
   company: {
     trade_name: string;
     profile: {
@@ -19,6 +20,7 @@ const JobItem: React.FC<JobItemProps> = ({
   title,
   description,
   company,
+  available,
 }) => {
   const { push } = useHistory();
 
@@ -46,10 +48,16 @@ const JobItem: React.FC<JobItemProps> = ({
       <p>{description}</p>
       <ClassesList />
       <footer>
-        <p>
-          Empresa
-          <strong>{company.trade_name}</strong>
-        </p>
+        <div>
+          <p>
+            Empresa
+            <strong>{company.trade_name}</strong>
+          </p>
+          <p>
+            Posições disponíveis
+            <strong>{available}</strong>
+          </p>
+        </div>
         <button type="button" onClick={handleJobDetails}>
           Saiba mais
         </button>

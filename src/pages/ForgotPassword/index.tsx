@@ -13,7 +13,7 @@ import {
   ButtonContainer,
 } from './styles';
 
-import logo from '../../assets/images/logo.svg';
+import logo from '../../assets/images/logo.png';
 import backIcon from '../../assets/images/icons/back.svg';
 
 import Background from '../../components/Background';
@@ -95,7 +95,7 @@ const ForgotPassword: React.FC = () => {
       <Background>
         <LogoContainer>
           <img src={logo} alt="Logo Proffy" />
-          <h1>Sua plataforma de estudo online</h1>
+          <h1>Sua plataforma de vagas online</h1>
         </LogoContainer>
       </Background>
     </Container>

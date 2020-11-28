@@ -3,7 +3,7 @@ import { FiBriefcase, FiHome, FiUsers } from 'react-icons/fi';
 
 import { Container, LogoArea, MenuItem } from './styles';
 
-import logo from '../../assets/images/logo.svg';
+import logo from '../../assets/images/logo.png';
 
 const HeaderCompany: React.FC = () => {
   return (
