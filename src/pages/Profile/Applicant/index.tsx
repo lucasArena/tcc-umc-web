@@ -134,9 +134,10 @@ const Profile: React.FC = () => {
         const userUpdated = await api.put(`/users/${id}`, {
           name: dataFormatted.name,
           email: dataFormatted.email,
-          country_id: dataFormatted.country_id,
           profile: {
-            country_id: dataFormatted.country_id,
+            country: {
+              id: dataFormatted.country_id,
+            },
             bio: dataFormatted.bio,
             contract: dataFormatted.contract,
             cpf: dataFormatted.cpf,
@@ -262,7 +263,7 @@ const Profile: React.FC = () => {
           <input type="file" id="avatar" onChange={handleAvatarUpdate} />
           <img
             src={
-              user.avatar
+              user.avatar_url
                 ? user.avatar_url
                 : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
             }

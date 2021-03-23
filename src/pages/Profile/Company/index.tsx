@@ -27,8 +27,10 @@ interface FormProps {
   name: string;
   email: string;
   avatar_url: string;
-  trade_name: string;
-  cnpj: string;
+  profile: {
+    trade_name: string;
+    cnpj: string;
+  };
 }
 
 const Profile: React.FC = () => {
@@ -41,12 +43,12 @@ const Profile: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: FormProps) => {
-      const formattedCNPJ = data.cnpj.replace(/[A-Za-z]\s/g, '');
+      const formattedCNPJ = data.profile.cnpj.replace(/[A-Za-z]\s/g, '');
 
       const dataFormatted = {
         name: data.name.replace(/[^a-zA-Z ]+/g, ''),
         email: data.email,
-        trade_name: data.trade_name,
+        trade_name: data.profile.cnpj,
         cnpj: formattedCNPJ,
       };
 
@@ -146,8 +148,10 @@ const Profile: React.FC = () => {
           name,
           email,
           avatar_url,
-          trade_name,
-          cnpj,
+          profile: {
+            trade_name,
+            cnpj,
+          },
         });
       } catch (err) {
         console.log(err);
@@ -169,7 +173,7 @@ const Profile: React.FC = () => {
           <input type="file" id="avatar" onChange={handleAvatarUpdate} />
           <img
             src={
-              user.avatar
+              user.avatar_url
                 ? user.avatar_url
                 : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
             }
@@ -193,14 +197,18 @@ const Profile: React.FC = () => {
             <InputMask
               mask="99.999.999/9999-99"
               label="CNPJ"
-              name="cnpj"
+              name="profile[cnpj]"
               id="cnpj"
               width="40%"
             />
           </InputGroup>
 
           <InputGroup>
-            <Input label="Nome fantasia" name="trade_name" id="trade_name" />
+            <Input
+              label="Nome fantasia"
+              name="profile[trade_name]"
+              id="trade_name"
+            />
           </InputGroup>
         </fieldset>
         <footer>

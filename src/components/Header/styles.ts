@@ -1,6 +1,9 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { darken } from 'polished';
+import { Link, NavLink } from 'react-router-dom';
+
+interface IDropDown {
+  isOpen: boolean;
+}
 
 export const Container = styled.div`
   display: flex;
@@ -24,16 +27,22 @@ export const Container = styled.div`
   }
 `;
 
-export const ProfileArea = styled(Link)`
+export const LogoContainer = styled(Link)`
+  display: flex;
+
+  img {
+    width: 128px;
+  }
+`;
+
+export const ProfileArea = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
-  text-decoration: none;
-  color: ${(props) => props.theme.colors.boxBase};
-  transition: color 0.2s;
 
-  &:hover {
-    color: rgba(255, 255, 255, 0.8);
-  }
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 
   img {
     width: 40px;
@@ -43,37 +52,68 @@ export const ProfileArea = styled(Link)`
   }
 `;
 
-export const Right = styled.section`
-  display: flex;
+export const DropDown = styled.div<IDropDown>`
+  position: absolute;
+  background: ${(props) => props.theme.colors.primaryDarker};
+  top: calc(100% + 24px);
+  right: 0;
 
-  a {
-    cursor: pointer;
-    text-decoration: none;
-    margin-right: 2rem;
-    border: 0;
-    border-radius: 1rem;
-    padding: 1rem 1.5rem;
-    font-size: 1.5rem;
-    background: ${(props) => props.theme.colors.primaryDarker};
-    color: ${(props) => props.theme.colors.buttonText};
-    transition: background 0.4s;
+  width: 256px;
+  border-radius: 10px;
+  opacity: ${({ isOpen }) => (isOpen ? '100%' : '0')};
+  transition: opacity 0.2s ease 0s, visibility 0.2s ease 0s;
 
-    &:hover {
-      background: ${(props) => darken(0.04, props.theme.colors.primaryDarker)};
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 19px;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0px 8px 8px;
+    border-color: transparent transparent
+      ${(props) => props.theme.colors.primaryDarker};
   }
 `;
 
-export const Logout = styled(Link)`
-  background: ${(props) => props.theme.colors.primaryDarker};
-  padding: 0.8rem;
-  border-radius: 0.8rem;
+export const DropDownItem = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  color: ${(props) => props.theme.colors.buttonText};
+  text-decoration: none;
+  border-radius: inherit;
+  transition: ease-in 0.4s;
 
   svg {
-    display: flex;
+    margin-right: 10px;
   }
 
-  @media (min-width: 1100px) {
-    padding: 1.2rem;
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryDark};
+  }
+`;
+
+export const DropDownItemButton = styled.button`
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  color: ${(props) => props.theme.colors.buttonText};
+  text-decoration: none;
+  border-radius: inherit;
+  transition: ease-in 0.4s;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  width: 100%;
+
+  svg {
+    margin-right: 10px;
+  }
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryDark};
   }
 `;

@@ -1,19 +1,36 @@
-import React, { useCallback, useMemo } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { FiPower } from 'react-icons/fi';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { FiLogOut } from 'react-icons/fi';
+import { BsPerson } from 'react-icons/bs';
+import { BiBuilding } from 'react-icons/bi';
 
-import { Container, ProfileArea, Right, Logout } from './styles';
+import logo from '../../assets/images/logo.svg';
+
+import {
+  Container,
+  LogoContainer,
+  ProfileArea,
+  DropDown,
+  DropDownItem,
+  DropDownItemButton,
+} from './styles';
 import { useAuth } from '../../hooks/auth';
 
 const Header: React.FC = () => {
   const { push } = useHistory();
   const { user, signOut } = useAuth();
 
+  const [openMenu, setOpenMenu] = useState(false);
+
   const handleSignOut = useCallback(() => {
     signOut();
 
     push('/');
   }, [push, signOut]);
+
+  const handleMenu = useCallback(() => {
+    setOpenMenu(!openMenu);
+  }, [openMenu]);
 
   const linkProfile = useMemo(() => {
     return user.profile_type === 'App\\ApplicantEloquent'
@@ -28,24 +45,38 @@ const Header: React.FC = () => {
   return (
     <Container>
       <menu>
-        <ProfileArea to={linkProfile}>
+        <LogoContainer to="/">
+          <img src={logo} alt="Logo aplicação" />
+        </LogoContainer>
+
+        <ProfileArea onClick={handleMenu}>
           <img
             src={
-              user.avatar
+              user.avatar_url
                 ? user.avatar_url
                 : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
             }
             alt={user.name}
           />
-          <span>{user.name}</span>
-        </ProfileArea>
 
-        <Right>
-          {isCompany && <Link to="/company/landing">Área do anunciante</Link>}
-          <Logout to="/" onClick={handleSignOut}>
-            <FiPower size={20} color="#E6E6F0" />
-          </Logout>
-        </Right>
+          <DropDown isOpen={openMenu}>
+            <DropDownItem to={linkProfile}>
+              <BsPerson size={20} color="#E6E6F0" />
+              <span>Meu perfil</span>
+            </DropDownItem>
+            {isCompany && (
+              <DropDownItem to="/company/landing">
+                <BiBuilding size={20} color="#E6E6F0" />
+                <span>Área do anunciante</span>
+              </DropDownItem>
+            )}
+
+            <DropDownItemButton onClick={handleSignOut}>
+              <FiLogOut size={20} color="#E6E6F0" />
+              <span>Sair</span>
+            </DropDownItemButton>
+          </DropDown>
+        </ProfileArea>
       </menu>
     </Container>
   );
