@@ -11,9 +11,9 @@ interface JobProps {
   description: string;
   available: number;
   company: {
-    trade_name: string;
+    avatar_url: string;
     profile: {
-      avatar_url: string;
+      trade_name: string;
     };
   };
 }
@@ -46,10 +46,10 @@ const Landing: React.FC = () => {
             />
           ))
         ) : (
-            <NoResult>
-              <span>Nenhuma vaga cadastrada</span>
-            </NoResult>
-          )}
+          <NoResult>
+            <span>Nenhuma vaga cadastrada</span>
+          </NoResult>
+        )}
       </JobList>
     </Content>
   );

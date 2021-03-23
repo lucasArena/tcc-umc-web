@@ -35,7 +35,7 @@ interface CredencialsProps {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { push } = useHistory();
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
   const { addToast } = useToast();
 
   const [passwordIcon, setPasswordIcon] = useState(showPasswordIcon);
@@ -70,7 +70,7 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [push, signIn, addToast],
+    [signIn, addToast, user],
   );
 
   const handleShowPassword = useCallback(() => {

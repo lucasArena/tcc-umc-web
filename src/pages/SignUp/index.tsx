@@ -38,10 +38,10 @@ const SignUp: React.FC = () => {
   const handleSignup = useCallback(
     async (data) => {
       try {
-        const { type, name, email, phone, password } = data;
+        const { profile_type, name, email, phone, password } = data;
 
         const signUpSchema = Yup.object().shape({
-          type: Yup.string().required('Tipo de usuário obrigatório'),
+          profile_type: Yup.string().required('Tipo de usuário obrigatório'),
           name: Yup.string().required('Nome de usuário obrigatório'),
           phone: Yup.string().required('Telefone de usuário obrigatório'),
           email: Yup.string().email().required('E-mail de usuário obrigatório'),
@@ -57,7 +57,7 @@ const SignUp: React.FC = () => {
           phone,
           email,
           password,
-          type,
+          profile_type,
         });
 
         push('/');
@@ -92,7 +92,7 @@ const SignUp: React.FC = () => {
       const formData = formRef.current?.getData();
 
       const signUpSchema = Yup.object().shape({
-        type: Yup.string().required('Tipo de usuário obrigatório'),
+        profile_type: Yup.string().required('Tipo de usuário obrigatório'),
         name: Yup.string().required('Nome de usuário obrigatório'),
         phone: Yup.string().required('Telefone de usuário obrigatório'),
         email: Yup.string().email().required('E-mail de usuário obrigatório'),
@@ -136,13 +136,13 @@ const SignUp: React.FC = () => {
               <Tab selected={false}>Sou Anunciante</Tab>
             </Tabs> */}
             <Select
-              name="type"
-              id="type"
+              name="profile_type"
+              id="profile_type"
               width="100%"
               placeholder="Selecione"
               options={[
-                { value: 'A', label: 'Candidato' },
-                { value: 'C', label: 'Anunciante' },
+                { value: 'App\\ApplicantEloquent', label: 'Candidato' },
+                { value: 'App\\CompanyEloquent', label: 'Anunciante' },
               ]}
             />
             <Input

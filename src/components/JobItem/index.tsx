@@ -9,9 +9,9 @@ interface JobItemProps {
   description: string;
   available: number;
   company: {
-    trade_name: string;
+    avatar_url: string;
     profile: {
-      avatar_url: string;
+      trade_name: string;
     };
   };
 }
@@ -35,10 +35,10 @@ const JobItem: React.FC<JobItemProps> = ({
       <header>
         <img
           src={
-            (company.profile && company.profile.avatar_url) ||
+            (company && company.avatar_url) ||
             'https://images6.fanpop.com/image/photos/38200000/Spongebob-Icon-spongebob-squarepants-38211111-200-200.jpg'
           }
-          alt={company.trade_name}
+          alt={company.profile.trade_name}
         />
         <div>
           <strong>{title}</strong>
@@ -51,7 +51,7 @@ const JobItem: React.FC<JobItemProps> = ({
         <div>
           <p>
             Empresa
-            <strong>{company.trade_name}</strong>
+            <strong>{company.profile.trade_name}</strong>
           </p>
           <p>
             Posições disponíveis

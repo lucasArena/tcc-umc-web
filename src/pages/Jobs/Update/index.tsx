@@ -17,11 +17,14 @@ import { useToast } from '../../../hooks/toast';
 import Textarea from '../../../components/TextArea';
 import Select from '../../../components/Select';
 
+interface JobType {
+  id: string;
+}
 interface FormProps {
   title: string;
   description: string;
-  job_type_id: number;
   quantity: number;
+  type: JobType;
 }
 
 const Profile: React.FC = () => {
@@ -36,20 +39,28 @@ const Profile: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: FormProps) => {
       const dataFormatted = {
-        company_id: user.profile.id,
+        company: {
+          id: user.profile.id,
+        },
         title: data.title,
         description: data.description,
-        job_type_id: data.job_type_id,
         quantity: data.quantity,
+        type: data.type,
       };
+
+      console.log(dataFormatted);
 
       try {
         formRef.current?.setErrors([]);
         const schema = Yup.object().shape({
-          company_id: Yup.number().required('Id da empresa obrigatório'),
+          company: Yup.object().shape({
+            id: Yup.number().required('Id da empresa obrigatório'),
+          }),
           title: Yup.string().required('Título obrigatório'),
           description: Yup.string().required('Descrição obrigatório'),
-          job_type_id: Yup.string().required('Tipo de vaga obrigatório'),
+          type: Yup.object().shape({
+            id: Yup.string().required('Tipo de vaga obrigatório'),
+          }),
         });
 
         await schema.validate(dataFormatted, {
@@ -114,8 +125,8 @@ const Profile: React.FC = () => {
           <InputGroup>
             <Select
               label="Tipo de vaga"
-              id="job_type_id"
-              name="job_type_id"
+              id="type[id]"
+              name="type[id]"
               placeholder="Selecione"
               width="100%"
               options={[

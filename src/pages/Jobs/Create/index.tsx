@@ -35,20 +35,28 @@ const Profile: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: FormProps) => {
       const dataFormatted = {
-        company_id: user.profile.id,
+        company: {
+          id: user.profile.id,
+        },
+        type: {
+          id: data.job_type_id,
+        },
         title: data.title.replace(/[^a-zA-Z ]+/g, ''),
         description: data.description.replace(/[^a-zA-Z ]+/g, ''),
-        job_type_id: data.job_type_id,
         quantity: data.quantity,
       };
       console.log(dataFormatted);
       try {
         formRef.current?.setErrors([]);
         const schema = Yup.object().shape({
-          company_id: Yup.number().required('Id da empresa obrigatório'),
+          company: Yup.object().shape({
+            id: Yup.number().required('Id da empresa obrigatório'),
+          }),
+          type: Yup.object().shape({
+            id: Yup.string().required('Tipo de vaga obrigatório'),
+          }),
           title: Yup.string().required('Título obrigatório'),
           description: Yup.string().required('Descrição obrigatório'),
-          job_type_id: Yup.string().required('Tipo de vaga obrigatório'),
           quantity: Yup.number().required('Quantidade obrigatório'),
         });
 
@@ -66,6 +74,7 @@ const Profile: React.FC = () => {
 
         push('/company/jobs');
       } catch (err) {
+        console.log(err);
         addToast({
           title: 'Erro',
           description: 'Erro ao tentar criar a vaga',

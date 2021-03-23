@@ -28,16 +28,18 @@ interface JobProps {
   description: string;
   created_at: string;
   company: {
-    trade_name: string;
+    avatar_url?: string;
     profile: {
-      avatar_url?: string;
+      trade_name: string;
     };
   };
-  job_types: {
+  type: {
     name: string;
   };
-  applications: {
-    user_id: number;
+  applications?: {
+    user: {
+      id: number;
+    };
   }[];
 }
 
@@ -55,12 +57,12 @@ const JobDetails: React.FC = () => {
       description: '',
       created_at: '',
       company: {
-        trade_name: '',
+        avatar_url: undefined,
         profile: {
-          avatar_url: undefined,
+          trade_name: '',
         },
       },
-      job_types: {
+      type: {
         name: '',
       },
       applications: [],
@@ -70,8 +72,12 @@ const JobDetails: React.FC = () => {
   const handleAplicattion = useCallback(async () => {
     try {
       await api.post('/applications', {
-        user_id: user.id,
-        job_id: job.id,
+        user: {
+          id: user.id,
+        },
+        job: {
+          id: job.id,
+        },
       });
 
       addToast({
@@ -102,8 +108,8 @@ const JobDetails: React.FC = () => {
 
   const applicationCreated = useMemo(() => {
     if (job) {
-      const userApplication = job.applications.find(
-        (application) => application.user_id === user.id,
+      const userApplication = job.applications?.find(
+        (application) => application.user.id === user.id,
       );
 
       return !!userApplication;
@@ -126,16 +132,14 @@ const JobDetails: React.FC = () => {
         <AvatarContainer>
           <img
             src={
-              (job.company &&
-                job.company.profile &&
-                job.company.profile.avatar_url) ||
+              (job.company && job.company.avatar_url) ||
               'https://images6.fanpop.com/image/photos/38200000/Spongebob-Icon-spongebob-squarepants-38211111-200-200.jpg'
             }
             alt="Lucas Arena"
           />
         </AvatarContainer>
 
-        <h2>{job.company.trade_name}</h2>
+        <h2>{job.company.profile.trade_name}</h2>
       </ProfileInfo>
       <FormJobDetails>
         <fieldset>
@@ -150,7 +154,7 @@ const JobDetails: React.FC = () => {
             <div>
               <section>
                 <strong>Tipo de vaga: </strong>
-                <span>{job.job_types.name}</span>
+                <span>{job.type.name}</span>
               </section>
             </div>
           </Main>

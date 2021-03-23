@@ -16,13 +16,13 @@ const Header: React.FC = () => {
   }, [push, signOut]);
 
   const linkProfile = useMemo(() => {
-    return user.profile_type === 'App\\Applicant'
+    return user.profile_type === 'App\\ApplicantEloquent'
       ? '/profile/applicant'
       : '/profile/company';
   }, [user]);
 
   const isCompany = useMemo(() => {
-    return user.profile_type === 'App\\Company';
+    return user.profile_type === 'App\\CompanyEloquent';
   }, [user]);
 
   return (

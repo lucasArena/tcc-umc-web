@@ -24,13 +24,10 @@ interface JobProps {
   title: string;
   available: number;
   company: {
-    profile: {
-      avatar_url?: string;
-    };
+    avatar_url?: string;
   };
   applications: {
     id: number;
-    status_id: number;
     user: {
       id: number;
       name: string;
@@ -40,6 +37,7 @@ interface JobProps {
       };
     };
     status: {
+      id: number;
       name: string;
     };
   }[];
@@ -64,7 +62,9 @@ const Applications: React.FC = () => {
       const response = await api.patch<ApplicationProps>(
         `/applications/${application_id}`,
         {
-          status_id,
+          status: {
+            id: status_id,
+          },
         },
       );
 
@@ -122,7 +122,7 @@ const Applications: React.FC = () => {
             <main>
               <ApplicationInfo>
                 <section>
-                  <img src={job.company.profile.avatar_url} alt={job.title} />
+                  <img src={job.company.avatar_url} alt={job.title} />
                   <h3>{job.title}</h3>
                 </section>
                 <strong>{`Disponíveis: ${job.available}`}</strong>
@@ -147,29 +147,29 @@ const Applications: React.FC = () => {
                         <FiDownload width={20} />
                       </Link>
                     </ApplicantInfo>
-                    {application.status_id !== 1 ? (
+                    {application.status.id !== 1 ? (
                       <h5>{application.status.name}</h5>
                     ) : (
-                        <ApplicantActions>
-                          <Button
-                            type="button"
-                            onClick={() =>
-                              handleChangeStatusApplication(application.id, 2)
-                            }
-                            style={{ background: '#e33d3d' }}
-                          >
-                            Reprovar
+                      <ApplicantActions>
+                        <Button
+                          type="button"
+                          onClick={() =>
+                            handleChangeStatusApplication(application.id, 2)
+                          }
+                          style={{ background: '#e33d3d' }}
+                        >
+                          Reprovar
                         </Button>
-                          <Button
-                            type="button"
-                            onClick={() =>
-                              handleChangeStatusApplication(application.id, 3)
-                            }
-                          >
-                            Aprovar
+                        <Button
+                          type="button"
+                          onClick={() =>
+                            handleChangeStatusApplication(application.id, 3)
+                          }
+                        >
+                          Aprovar
                         </Button>
-                        </ApplicantActions>
-                      )}
+                      </ApplicantActions>
+                    )}
                   </section>
                 ))}
               </ApplicantList>
