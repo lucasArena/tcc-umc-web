@@ -9,6 +9,7 @@ import ForgotPassword from '../pages/ForgotPassword';
 import Landing from '../pages/Landing';
 import ProfileApplicant from '../pages/Profile/Applicant';
 import ProfileCompany from '../pages/Profile/Company';
+import ProfileAdmin from '../pages/Profile/Admin';
 import SuccessSubmit from '../pages/SucessSubmit';
 import JobDetails from '../pages/JobDetails';
 
@@ -21,6 +22,12 @@ import CompanyLanding from '../pages/CompanyLanding';
 
 import UserApplications from '../pages/UserApplications';
 
+import AdminPackage from '../pages/Admin/Package';
+import AdminPackageCreate from '../pages/Admin/Package/Create';
+import AdminPackageUpdate from '../pages/Admin/Package/Update';
+
+import AdminPayment from '../pages/Admin/Payment';
+
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={SignIn} />
@@ -28,6 +35,7 @@ const Routes: React.FC = () => (
     <Route path="/forgot-password" component={ForgotPassword} />
     <Route path="/profile/applicant" component={ProfileApplicant} isPrivate />
     <Route path="/profile/company" component={ProfileCompany} isPrivate />
+    <Route path="/profile/admin" component={ProfileAdmin} isPrivate />
     <Route path="/landing" component={Landing} isPrivate />
     <Route path="/jobDetails" component={JobDetails} isPrivate />
     <Route
@@ -64,6 +72,28 @@ const Routes: React.FC = () => (
     />
 
     <Route path="/users/applications" component={UserApplications} isPrivate />
+
+    <Route
+      exact
+      path="/admin/packages"
+      component={AdminPackage}
+      isPrivate
+      isAdmin
+    />
+    <Route
+      path="/admin/package/create"
+      component={AdminPackageCreate}
+      isPrivate
+      isAdmin
+    />
+    <Route
+      path="/admin/package/edit/:packageId"
+      component={AdminPackageUpdate}
+      isPrivate
+      isAdmin
+    />
+
+    <Route path="/admin/payment/" component={AdminPayment} isPrivate isAdmin />
 
     <Route path="/success" component={SuccessSubmit} isPrivate />
   </Switch>

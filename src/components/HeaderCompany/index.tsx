@@ -1,26 +1,29 @@
 import React from 'react';
 
-import { FiBriefcase } from 'react-icons/fi';
-import { FaMoneyBillWave } from 'react-icons/fa';
+import { FiBriefcase, FiHome, FiUsers } from 'react-icons/fi';
 import { CgFeed } from 'react-icons/cg';
 
 import { Container, LogoArea, MenuItem } from './styles';
 
 import logo from '../../assets/images/logo.png';
 
-const HeaderAdmin: React.FC = () => {
+const HeaderCompany: React.FC = () => {
   return (
     <Container>
       <LogoArea>
         <img src={logo} alt="Logo sistema" />
       </LogoArea>
-      <MenuItem to="/admin/packages" activeClassName="selected">
-        <FiBriefcase width={20} />
-        Pacotes
+      <MenuItem to="/company/landing" activeClassName="selected">
+        <FiHome width={20} />
+        Início
       </MenuItem>
-      <MenuItem to="/admin/payment" activeClassName="selected">
-        <FaMoneyBillWave width={20} />
-        Pagamentos
+      <MenuItem to="/company/jobs" activeClassName="selected">
+        <FiBriefcase width={20} />
+        Vagas
+      </MenuItem>
+      <MenuItem to="/company/applications" activeClassName="selected">
+        <FiUsers width={20} />
+        Candidaturas
       </MenuItem>
       <MenuItem to="/landing" activeClassName="selected">
         <CgFeed width={20} />
@@ -30,4 +33,4 @@ const HeaderAdmin: React.FC = () => {
   );
 };
 
-export default HeaderAdmin;
+export default HeaderCompany;

@@ -106,15 +106,37 @@ const JobDetails: React.FC = () => {
     return dateFormatted;
   }, [job.created_at]);
 
-  const applicationCreated = useMemo(() => {
+  const applicationRule = useMemo(() => {
     if (job) {
-      const userApplication = job.applications?.find(
+      const userApplied = job.applications?.find(
         (application) => application.user.id === user.id,
       );
 
-      return !!userApplication;
+      if (userApplied) {
+        return {
+          enable: false,
+          description: 'Candidatado',
+        };
+      }
+
+      if (user.profile_type !== 'App\\ApplicantEloquent') {
+        return {
+          enable: false,
+          description: 'Somente candidatos podem aplicar-se',
+        };
+      }
+
+      if (user.profile.resume === '') {
+        return {
+          enable: false,
+          description: 'Para se candidatar deve-se ter um CV cadastrado',
+        };
+      }
     }
-    return false;
+    return {
+      enable: true,
+      description: 'Candidatar-se',
+    };
   }, [job, user]);
 
   useEffect(() => {
@@ -160,8 +182,11 @@ const JobDetails: React.FC = () => {
             </div>
           </Main>
           <Aside>
-            <Button onClick={handleAplicattion} disabled={applicationCreated}>
-              {applicationCreated ? 'Candidatado' : 'Candidatar-se'}
+            <Button
+              onClick={handleAplicattion}
+              disabled={!applicationRule.enable}
+            >
+              {applicationRule.description}
             </Button>
           </Aside>
         </Content>

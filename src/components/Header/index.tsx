@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { FiLogOut } from 'react-icons/fi';
 import { BsPerson } from 'react-icons/bs';
 import { BiBuilding } from 'react-icons/bi';
+import { RiAdminLine } from 'react-icons/ri';
 
 import logo from '../../assets/images/logo.svg';
 
@@ -33,9 +34,16 @@ const Header: React.FC = () => {
   }, [openMenu]);
 
   const linkProfile = useMemo(() => {
-    return user.profile_type === 'App\\ApplicantEloquent'
-      ? '/profile/applicant'
-      : '/profile/company';
+    switch (user.profile_type) {
+      case 'App\\ApplicantEloquent':
+        return '/profile/applicant';
+      case 'App\\CompanyEloquent':
+        return '/profile/company';
+      case 'App\\AdminEloquent':
+        return '/profile/admin';
+      default:
+        return '/profile/applicant';
+    }
   }, [user]);
 
   const isCompany = useMemo(() => {
@@ -44,6 +52,10 @@ const Header: React.FC = () => {
 
   const isApplicant = useMemo(() => {
     return user.profile_type === 'App\\ApplicantEloquent';
+  }, [user]);
+
+  const isAdmin = useMemo(() => {
+    return user.profile_type === 'App\\AdminEloquent';
   }, [user]);
 
   return (
@@ -80,6 +92,13 @@ const Header: React.FC = () => {
               <DropDownItem to="/company/landing">
                 <BiBuilding size={20} color="#E6E6F0" />
                 <span>Área do anunciante</span>
+              </DropDownItem>
+            )}
+
+            {isAdmin && (
+              <DropDownItem to="/admin/packages">
+                <RiAdminLine size={20} color="#E6E6F0" />
+                <span>Área do admin</span>
               </DropDownItem>
             )}
 
