@@ -19,6 +19,8 @@ import CompanyJobsUpdate from '../pages/Jobs/Update';
 import CompanyApplications from '../pages/Applications';
 import CompanyLanding from '../pages/CompanyLanding';
 
+import UserApplications from '../pages/UserApplications';
+
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={SignIn} />
@@ -54,6 +56,14 @@ const Routes: React.FC = () => (
       isPrivate
       isCompany
     />
+
+    <Route
+      path="/applicant/applications"
+      component={UserApplications}
+      isPrivate
+    />
+
+    <Route path="/users/applications" component={UserApplications} isPrivate />
 
     <Route path="/success" component={SuccessSubmit} isPrivate />
   </Switch>

@@ -134,10 +134,10 @@ const Profile: React.FC = () => {
         const userUpdated = await api.put(`/users/${id}`, {
           name: dataFormatted.name,
           email: dataFormatted.email,
+          profile_type: 'App\\ApplicantEloquent',
           profile: {
-            country: {
-              id: dataFormatted.country_id,
-            },
+            id: user.profile.id,
+            country_id: dataFormatted.country_id,
             bio: dataFormatted.bio,
             contract: dataFormatted.contract,
             cpf: dataFormatted.cpf,
@@ -163,7 +163,7 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [id, addToast, updateUser],
+    [id, user.profile.id, addToast, updateUser],
   );
 
   const handleAvatarUpdate = useCallback(
@@ -237,7 +237,7 @@ const Profile: React.FC = () => {
           country_id,
           gender,
           cpf,
-          born: born && format(parseISO(born), 'dd/M/Y'),
+          born: born && format(parseISO(born), 'dd/MM/Y'),
           bio,
           civil_state,
           salary_expectations,

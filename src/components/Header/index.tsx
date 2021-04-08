@@ -42,6 +42,10 @@ const Header: React.FC = () => {
     return user.profile_type === 'App\\CompanyEloquent';
   }, [user]);
 
+  const isApplicant = useMemo(() => {
+    return user.profile_type === 'App\\ApplicantEloquent';
+  }, [user]);
+
   return (
     <Container>
       <menu>
@@ -64,6 +68,14 @@ const Header: React.FC = () => {
               <BsPerson size={20} color="#E6E6F0" />
               <span>Meu perfil</span>
             </DropDownItem>
+
+            {isApplicant && (
+              <DropDownItem to="/applicant/applications">
+                <BiBuilding size={20} color="#E6E6F0" />
+                <span>Candidaturas</span>
+              </DropDownItem>
+            )}
+
             {isCompany && (
               <DropDownItem to="/company/landing">
                 <BiBuilding size={20} color="#E6E6F0" />

@@ -85,6 +85,7 @@ const Profile: React.FC = () => {
         const userUpdated = await api.put(`/users/${id}`, {
           name: dataFormatted.name,
           email: dataFormatted.email,
+          profile_type: 'App\\CompanyEloquent',
           profile: {
             trade_name: dataFormatted.trade_name,
             cnpj: dataFormatted.cnpj,
