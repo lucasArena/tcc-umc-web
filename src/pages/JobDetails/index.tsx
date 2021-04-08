@@ -114,6 +114,7 @@ const JobDetails: React.FC = () => {
 
       return !!userApplication;
     }
+    return false;
   }, [job, user]);
 
   useEffect(() => {

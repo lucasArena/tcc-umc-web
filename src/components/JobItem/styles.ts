@@ -109,6 +109,18 @@ export const Container = styled.article`
   }
 `;
 
+export const Label = styled.p`
+  margin-left: auto;
+  background: ${({ theme }) => theme.colors.secundary};
+  border-radius: 4px;
+  padding: 4px;
+
+  color: ${({ theme }) => theme.colors.buttonText};
+  text-transform: uppercase;
+  font-weight: bolder;
+  font-size: 12px;
+`;
+
 export const ClassesList = styled.section`
   display: flex;
   flex-direction: column;

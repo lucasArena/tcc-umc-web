@@ -21,7 +21,7 @@ const Select: React.FC<SelectProps> = ({
   ...rest
 }) => {
   const selectRef = useRef(null);
-  const { fieldName, defaultValue, registerField } = useField(name);
+  const { fieldName, defaultValue, registerField, error } = useField(name);
 
   const [selected, setSelected] = useState(defaultValue || '');
 
@@ -29,6 +29,7 @@ const Select: React.FC<SelectProps> = ({
     return setSelected(e.value);
   }, []);
 
+  console.log(error);
   useEffect(() => {
     setSelected(defaultValue || '');
   }, [defaultValue]);
@@ -60,9 +61,9 @@ const Select: React.FC<SelectProps> = ({
             ...styles,
             background: '#FAFAFC',
             position: 'relative',
-            borderWidth: 1,
+            borderWidth: !error ? 1 : 2,
             borderStyle: 'solid',
-            borderColor: '#E6E6F0',
+            borderColor: !error ? '#E6E6F0' : '#e33d3d',
             padding: '0 1.6rem',
             marginTop: '0.5rem',
             display: 'flex',

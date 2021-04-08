@@ -16,6 +16,11 @@ interface JobProps {
       trade_name: string;
     };
   };
+  applications: {
+    user: {
+      id: number;
+    };
+  }[];
 }
 
 const Landing: React.FC = () => {
@@ -40,6 +45,7 @@ const Landing: React.FC = () => {
               id={job.id}
               key={job.id}
               company={job.company}
+              applications={job.applications}
               title={job.title}
               description={job.description}
               available={job.available}

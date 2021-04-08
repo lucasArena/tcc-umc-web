@@ -44,6 +44,7 @@ const InputMask: React.FC<InputProps> = ({
       },
     });
   }, [registerField, fieldName]);
+
   return (
     <Container width={width}>
       <label htmlFor={id}>{label}</label>

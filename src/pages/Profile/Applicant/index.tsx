@@ -31,6 +31,7 @@ import InputMoney from '../../../components/InputMoney';
 
 import { useAuth } from '../../../hooks/auth';
 import { useToast } from '../../../hooks/toast';
+import getValidationErrors from '../../../utils/getValidationErrors';
 
 interface FormProps {
   name: string;
@@ -57,6 +58,8 @@ const Profile: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: FormProps) => {
+      formRef.current?.setErrors([]);
+
       const formattedSalaryExpectations = data.salary_expectations
         .replace(/\s/g, '')
         .replace(/\./g, '')
@@ -82,7 +85,7 @@ const Profile: React.FC = () => {
         const schema = Yup.object().shape({
           born: Yup.string().test(
             'born_date',
-            'born_date_must_be_a_valid_date',
+            'Data inválida',
             function testDateValid(bornDate) {
               if (!bornDate) {
                 return false;
@@ -137,14 +140,14 @@ const Profile: React.FC = () => {
           profile_type: 'App\\ApplicantEloquent',
           profile: {
             id: user.profile.id,
-            country_id: dataFormatted.country_id,
             bio: dataFormatted.bio,
-            contract: dataFormatted.contract,
             cpf: dataFormatted.cpf,
             born: dataFormatted.born,
             salary_expectations: dataFormatted.salary_expectations,
             civil_state: dataFormatted.civil_state,
             gender: 'M',
+            contract: dataFormatted.contract,
+            country_id: dataFormatted.country_id,
           },
         });
 
@@ -156,9 +159,23 @@ const Profile: React.FC = () => {
           type: 'success',
         });
       } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+
+          err.errors.forEach((error) => {
+            addToast({
+              title: 'Erro',
+              description: error,
+              type: 'error',
+            });
+          });
+          return;
+        }
+
         addToast({
           title: 'Erro',
-          description: 'Erro ao tentar atualizar o cadastro',
+          description: `Erro ao tentar atualizar o cadastro`,
           type: 'error',
         });
       }

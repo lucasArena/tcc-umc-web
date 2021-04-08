@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useAuth } from '../../hooks/auth';
 
-import { Container, ClassesList } from './styles';
+import { Container, Label, ClassesList } from './styles';
 
 interface JobItemProps {
   id: number;
@@ -14,6 +15,11 @@ interface JobItemProps {
       trade_name: string;
     };
   };
+  applications: {
+    user: {
+      id: number;
+    };
+  }[];
 }
 const JobItem: React.FC<JobItemProps> = ({
   id,
@@ -21,8 +27,16 @@ const JobItem: React.FC<JobItemProps> = ({
   description,
   company,
   available,
+  applications,
 }) => {
   const { push } = useHistory();
+  const { user } = useAuth();
+
+  const isSignup = useMemo(() => {
+    return !!applications.find((applicantion) => {
+      return applicantion.user.id === user.id;
+    });
+  }, [user, applications]);
 
   const handleJobDetails = useCallback(() => {
     push('/jobDetails', {
@@ -43,6 +57,8 @@ const JobItem: React.FC<JobItemProps> = ({
         <div>
           <strong>{title}</strong>
         </div>
+
+        {isSignup && <Label>Candidatado</Label>}
       </header>
 
       <p>{description}</p>

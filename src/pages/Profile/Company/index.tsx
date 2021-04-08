@@ -22,6 +22,7 @@ import api from '../../../services/api';
 
 import { useAuth } from '../../../hooks/auth';
 import { useToast } from '../../../hooks/toast';
+import getValidationErrors from '../../../utils/getValidationErrors';
 
 interface FormProps {
   name: string;
@@ -48,34 +49,39 @@ const Profile: React.FC = () => {
       const dataFormatted = {
         name: data.name.replace(/[^a-zA-Z ]+/g, ''),
         email: data.email,
-        trade_name: data.profile.cnpj,
-        cnpj: formattedCNPJ,
+        profile: {
+          trade_name: data.profile.trade_name,
+          cnpj: formattedCNPJ,
+        },
       };
 
       try {
         formRef.current?.setErrors([]);
         const schema = Yup.object().shape({
-          cnpj: Yup.string()
-            .test(
-              'cpf_validate',
-              'check_if_cpf_is_valid',
-              function isValidCPF(checkCNPJ) {
-                if (!checkCNPJ) {
-                  return false;
-                }
-
-                if (!CNPJValidator.isValid(checkCNPJ)) {
-                  return false;
-                }
-
-                return true;
-              },
-            )
-            .required('CNPJ obrigatório'),
           name: Yup.string().required('Nome obrigatório'),
           email: Yup.string()
             .email('Email inválido')
             .required('Nome obrigatório'),
+          profile: Yup.object().shape({
+            cnpj: Yup.string()
+              .test(
+                'cpf_validate',
+                'CNPJ inválido',
+                function isValidCPF(checkCNPJ) {
+                  if (!checkCNPJ) {
+                    return false;
+                  }
+
+                  if (!CNPJValidator.isValid(checkCNPJ)) {
+                    return false;
+                  }
+
+                  return true;
+                },
+              )
+              .required('CNPJ obrigatório'),
+            trade_name: Yup.string().required('Nome fantásia obrigatório'),
+          }),
         });
 
         await schema.validate(dataFormatted, {
@@ -86,10 +92,7 @@ const Profile: React.FC = () => {
           name: dataFormatted.name,
           email: dataFormatted.email,
           profile_type: 'App\\CompanyEloquent',
-          profile: {
-            trade_name: dataFormatted.trade_name,
-            cnpj: dataFormatted.cnpj,
-          },
+          profile: dataFormatted.profile,
         });
 
         updateUser(userUpdated.data);
@@ -100,10 +103,24 @@ const Profile: React.FC = () => {
           type: 'success',
         });
       } catch (err) {
-        console.log(err);
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          console.log(err);
+          formRef.current?.setErrors(errors);
+
+          err.errors.forEach((error) => {
+            addToast({
+              title: 'Erro',
+              description: error,
+              type: 'error',
+            });
+          });
+          return;
+        }
+
         addToast({
           title: 'Erro',
-          description: 'Erro ao tentar atualizar o cadastro',
+          description: `Erro ao tentar atualizar o cadastro`,
           type: 'error',
         });
       }
@@ -155,7 +172,6 @@ const Profile: React.FC = () => {
           },
         });
       } catch (err) {
-        console.log(err);
         addToast({
           title: 'Erro',
           description: 'Erro ao tentar resgatar os dados do usuário',
