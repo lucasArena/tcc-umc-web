@@ -38,7 +38,7 @@ const Payment: React.FC = () => {
         const paymentUpdated = await api.patch<PaymentProps>(
           `/payments/${paymentId}`,
           {
-            status: 'Payed',
+            status: 'Paid',
           },
         );
 
@@ -62,7 +62,7 @@ const Payment: React.FC = () => {
           description: 'Pagamento confirmado com sucesso',
           type: 'success',
         });
-      } catch {
+      } catch (err) {
         addToast({
           title: 'Erro',
           description: 'Erro ao tentar confirmar pagamento',
@@ -98,7 +98,7 @@ const Payment: React.FC = () => {
             </main>
 
             <aside>
-              {payment.status === 'Payed' ? (
+              {payment.status === 'Paid' ? (
                 <h5>Pago</h5>
               ) : (
                 <ConfirmPaymentButton

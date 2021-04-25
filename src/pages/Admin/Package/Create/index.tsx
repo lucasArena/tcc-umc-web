@@ -26,6 +26,7 @@ interface FormProps {
   name: string;
   month_value: string;
   year_value: string;
+  quantity: number;
 }
 
 const Profile: React.FC = () => {
@@ -54,6 +55,7 @@ const Profile: React.FC = () => {
         name: data.name,
         month_value: formattedMonthValue,
         year_value: formattedYearValue,
+        quantity: data.quantity,
       };
 
       try {
@@ -118,11 +120,18 @@ const Profile: React.FC = () => {
               id="type"
               name="type"
               placeholder="Selecione"
-              width="100%"
+              width="50%"
               options={[
                 { value: 'A', label: 'Candidato' },
                 { value: 'C', label: 'Empresa' },
               ]}
+            />
+            <Input
+              type="number"
+              label="Quantidade de vagas"
+              name="quantity"
+              id="quantity"
+              width="50%"
             />
           </InputGroup>
           <InputGroup>

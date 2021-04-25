@@ -1,16 +1,5 @@
 import styled from 'styled-components';
-
-export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  color: ${(props) => props.theme.colors.textPrimary};
-  background: ${(props) => props.theme.colors.primary};
-`;
+import Button from '../../components/Button';
 
 export const Content = styled.div`
   width: 100%;
@@ -19,20 +8,29 @@ export const Content = styled.div`
   flex-direction: column;
 
   background: ${(props) => props.theme.colors.background};
+  margin: 1rem auto;
 
   @media (min-width: 1100px) {
-    flex-direction: row;
     flex: 1;
   }
 `;
 
+export const AdvertiseContainer = styled.aside`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+export const ButtonBePremiumUser = styled(Button)`
+  min-width: 400px;
+`;
+
 export const JobList = styled.main`
-  margin: 3.2rem auto;
+  margin: 1rem auto;
   width: 90%;
   height: 60%;
 
   @media (min-width: 700px) {
-    padding: 3.2rem 0;
     max-width: 740px;
     margin: 0 auto;
   }

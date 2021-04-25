@@ -48,8 +48,6 @@ const Profile: React.FC = () => {
         type: data.type,
       };
 
-      console.log(dataFormatted);
-
       try {
         formRef.current?.setErrors([]);
         const schema = Yup.object().shape({

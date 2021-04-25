@@ -103,7 +103,7 @@ const Profile: React.FC = () => {
           cpf: Yup.string()
             .test(
               'cpf_validate',
-              'check_if_cpf_is_valid',
+              'CPF inválido',
               function isValidCPF(checkCPF) {
                 if (!checkCPF) {
                   return false;
@@ -127,7 +127,7 @@ const Profile: React.FC = () => {
           name: Yup.string().required('Nome obrigatório'),
           email: Yup.string()
             .email('Email inválido')
-            .required('Nome obrigatório'),
+            .required('Email obrigatório'),
         });
 
         await schema.validate(dataFormatted, {

@@ -43,6 +43,19 @@ interface JobProps {
   }[];
 }
 
+interface UserApplications {
+  id: number;
+  createdAt: string;
+}
+
+interface UserPackage {
+  package: {
+    id: number;
+    quantity: number;
+  };
+  active: boolean;
+}
+
 const JobDetails: React.FC = () => {
   const { state } = useLocation<Props>();
   const { user } = useAuth();
@@ -68,6 +81,12 @@ const JobDetails: React.FC = () => {
       applications: [],
     };
   });
+  const [userApplications, setUserApplications] = useState<UserApplications[]>(
+    [],
+  );
+  const [userPackage, setUserPackage] = useState<UserPackage>(
+    {} as UserPackage,
+  );
 
   const handleAplicattion = useCallback(async () => {
     try {
@@ -132,22 +151,68 @@ const JobDetails: React.FC = () => {
           description: 'Para se candidatar deve-se ter um CV cadastrado',
         };
       }
+
+      if (!userPackage.package && userApplications.length >= 2) {
+        return {
+          enable: false,
+          description: 'Limite de candidaturas mensais atingidas',
+        };
+      }
+
+      if (
+        userPackage.package &&
+        userApplications.length >= userPackage.package.quantity
+      ) {
+        return {
+          enable: false,
+          description:
+            'Limite de candidaturas mensais do pacote contratado atingidas',
+        };
+      }
     }
     return {
       enable: true,
       description: 'Candidatar-se',
     };
-  }, [job, user]);
+  }, [job, user, userApplications, userPackage.package]);
 
   useEffect(() => {
     async function handleGetJob() {
-      const responseJob = await api.get(`/jobs/${jobId}`);
+      const [
+        responseJob,
+        responseUserApplications,
+        responseUserPackage,
+      ] = await Promise.all([
+        api.get(`/jobs/${jobId}`),
+        api.get<UserApplications[]>(`/users/${user.id}/applications`),
+        api.get<UserPackage[]>(`/users/${user.id}/packages`, {
+          params: {
+            active: 1,
+          },
+        }),
+      ]);
 
       setJob(responseJob.data);
+      setUserApplications(
+        responseUserApplications.data.filter(
+          (application: UserApplications) => {
+            return (
+              new Date(application.createdAt).getMonth() + 1 ===
+              new Date().getMonth() + 1
+            );
+          },
+        ),
+      );
+
+      setUserPackage(
+        responseUserPackage.data.length
+          ? responseUserPackage.data[0]
+          : ({} as UserPackage),
+      );
     }
 
     handleGetJob();
-  }, [jobId]);
+  }, [jobId, user.id]);
 
   return (
     <Container>

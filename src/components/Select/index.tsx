@@ -29,7 +29,6 @@ const Select: React.FC<SelectProps> = ({
     return setSelected(e.value);
   }, []);
 
-  console.log(error);
   useEffect(() => {
     setSelected(defaultValue || '');
   }, [defaultValue]);

@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { Content, JobList, NoResult } from './styles';
+import {
+  Content,
+  AdvertiseContainer,
+  ButtonBePremiumUser,
+  JobList,
+  NoResult,
+} from './styles';
 
 import api from '../../services/api';
 import JobItem from '../../components/JobItem';
@@ -26,6 +33,7 @@ interface JobProps {
 const Landing: React.FC = () => {
   const [jobs, setJobs] = useState<JobProps[]>([]);
 
+  const { push } = useHistory();
   useEffect(() => {
     async function handleGetJobs() {
       const responseJobs = await api.get<JobProps[]>('/jobs/available');
@@ -36,9 +44,20 @@ const Landing: React.FC = () => {
     handleGetJobs();
   }, []);
 
+  const handleButtonBePremium = useCallback(() => {
+    push('/packages');
+  }, [push]);
+
   return (
     <Content>
       <JobList>
+        <AdvertiseContainer>
+          <section>
+            <ButtonBePremiumUser onClick={handleButtonBePremium}>
+              Transforme-se em premium
+            </ButtonBePremiumUser>
+          </section>
+        </AdvertiseContainer>
         {jobs.length ? (
           jobs.map((job) => (
             <JobItem

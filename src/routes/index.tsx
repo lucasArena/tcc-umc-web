@@ -13,6 +13,8 @@ import ProfileAdmin from '../pages/Profile/Admin';
 import SuccessSubmit from '../pages/SucessSubmit';
 import JobDetails from '../pages/JobDetails';
 
+import Packages from '../pages/Packages';
+
 import CompanyJobs from '../pages/Jobs';
 import CompanyJobsCreate from '../pages/Jobs/Create';
 import CompanyJobsUpdate from '../pages/Jobs/Update';
@@ -38,6 +40,9 @@ const Routes: React.FC = () => (
     <Route path="/profile/admin" component={ProfileAdmin} isPrivate />
     <Route path="/landing" component={Landing} isPrivate />
     <Route path="/jobDetails" component={JobDetails} isPrivate />
+
+    <Route path="/packages" component={Packages} isPrivate />
+
     <Route
       path="/company/landing"
       component={CompanyLanding}

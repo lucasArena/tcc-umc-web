@@ -37,6 +37,7 @@ const Profile: React.FC = () => {
       const dataFormatted = {
         company: {
           id: user.profile.id,
+          profile_type: user.profile_type,
         },
         type: {
           id: data.job_type_id,
@@ -45,7 +46,7 @@ const Profile: React.FC = () => {
         description: data.description.replace(/[^a-zA-Z ]+/g, ''),
         quantity: data.quantity,
       };
-      console.log(dataFormatted);
+
       try {
         formRef.current?.setErrors([]);
         const schema = Yup.object().shape({
