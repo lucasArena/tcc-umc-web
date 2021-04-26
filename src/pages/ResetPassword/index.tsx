@@ -28,22 +28,22 @@ interface FormProps {
   profile_type: string;
 }
 
-const ForgotPassword: React.FC = () => {
+const ResetPassword: React.FC = () => {
   const { push } = useHistory();
   const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
 
   const [isFormInvalid, setIsFormInvalid] = useState(true);
 
-  const handleForgotPassword = useCallback(
+  const handleResetPassword = useCallback(
     async (data: FormProps) => {
       try {
-        const forgotPasswordSchema = Yup.object().shape({
-          profile_type: Yup.string().required('Tipo é obrigatório'),
-          email: Yup.string().email().required('E-mail é obrigatório'),
+        const resetPasswordSchema = Yup.object().shape({
+          password: Yup.string().required(),
+          password_confirmatrion: Yup.string().required(),
         });
 
-        await forgotPasswordSchema.validate(data, {
+        await resetPasswordSchema.validate(data, {
           abortEarly: true,
         });
 
@@ -55,9 +55,8 @@ const ForgotPassword: React.FC = () => {
         });
 
         push('/success', {
-          title: 'Redefinição enviada!',
-          description:
-            'Boa, agora é só checar o e-mail que foi enviado para você redefinir sua senha e aproveitar os estudos.',
+          title: 'Redefinição de senha realizada com sucesso',
+          description: 'Boa, agora é só se logar novamente com a nova senha.',
           redirectTo: '/',
           buttonText: 'Voltar ao login',
         });
@@ -65,7 +64,7 @@ const ForgotPassword: React.FC = () => {
         addToast({
           type: 'error',
           title: 'Erro',
-          description: 'Erro ao tentar enviar o e-mail de reset de senha',
+          description: 'Erro ao tentar resetar a senha',
         });
       }
     },
@@ -76,12 +75,12 @@ const ForgotPassword: React.FC = () => {
     try {
       const formData = formRef.current?.getData();
 
-      const forgotPasswordSchema = Yup.object().shape({
-        profile_type: Yup.string().required(),
-        email: Yup.string().email().required(),
+      const resetPasswordSchema = Yup.object().shape({
+        password: Yup.string().required(),
+        password_confirmatrion: Yup.string().required(),
       });
 
-      await forgotPasswordSchema.validate(formData, {
+      await resetPasswordSchema.validate(formData, {
         abortEarly: true,
       });
 
@@ -93,6 +92,12 @@ const ForgotPassword: React.FC = () => {
 
   return (
     <Container>
+      <Background>
+        <LogoContainer>
+          <img src={logo} alt="Logo Proffy" />
+          <h1>Sua plataforma de vagas online</h1>
+        </LogoContainer>
+      </Background>
       <Content>
         <TobBar>
           <Link to="/">
@@ -100,37 +105,27 @@ const ForgotPassword: React.FC = () => {
           </Link>
         </TobBar>
         <FormContent>
-          <FormSignup ref={formRef} onSubmit={handleForgotPassword}>
+          <FormSignup ref={formRef} onSubmit={handleResetPassword}>
             <section>
-              <h1>Eita, esqueceu sua senha?</h1>
-              <h2>Não esquenta, vamos dar um jeito nisso.</h2>
+              <h1>Bora resetar a senha?</h1>
+              <h2>Vamos lá, só colocar a nova senha que deseja.</h2>
             </section>
 
-            <Select
-              name="profile_type"
-              placeholder="Tipo"
-              options={[
-                { value: 'App\\ApplicantEloquent', label: 'Candidato' },
-                { value: 'App\\CompanyEloquent', label: 'Empresa' },
-              ]}
+            <Input name="password" placeholder="Senha" onKeyUp={validateForm} />
+            <Input
+              name="password_confirmation"
+              placeholder="Confirmação de senha"
+              onKeyUp={validateForm}
             />
 
-            <Input name="email" placeholder="Email" onKeyUp={validateForm} />
-
             <ButtonContainer>
-              <Button disabled={isFormInvalid}>Enviar</Button>
+              <Button disabled={isFormInvalid}>Resetar</Button>
             </ButtonContainer>
           </FormSignup>
         </FormContent>
       </Content>
-      <Background>
-        <LogoContainer>
-          <img src={logo} alt="Logo Proffy" />
-          <h1>Sua plataforma de vagas online</h1>
-        </LogoContainer>
-      </Background>
     </Container>
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;

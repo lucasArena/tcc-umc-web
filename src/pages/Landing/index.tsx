@@ -54,7 +54,7 @@ const Landing: React.FC = () => {
         <AdvertiseContainer>
           <section>
             <ButtonBePremiumUser onClick={handleButtonBePremium}>
-              Transforme-se em premium
+              Transforme-se PREMIUM
             </ButtonBePremiumUser>
           </section>
         </AdvertiseContainer>

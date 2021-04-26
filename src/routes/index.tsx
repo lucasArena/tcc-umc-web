@@ -6,6 +6,7 @@ import Route from './Route';
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';
 import Landing from '../pages/Landing';
 import ProfileApplicant from '../pages/Profile/Applicant';
 import ProfileCompany from '../pages/Profile/Company';
@@ -35,6 +36,7 @@ const Routes: React.FC = () => (
     <Route path="/" exact component={SignIn} />
     <Route path="/signup" component={SignUp} />
     <Route path="/forgot-password" component={ForgotPassword} />
+    <Route path="/reset-password" component={ResetPassword} />
     <Route path="/profile/applicant" component={ProfileApplicant} isPrivate />
     <Route path="/profile/company" component={ProfileCompany} isPrivate />
     <Route path="/profile/admin" component={ProfileAdmin} isPrivate />
@@ -100,7 +102,7 @@ const Routes: React.FC = () => (
 
     <Route path="/admin/payment/" component={AdminPayment} isPrivate isAdmin />
 
-    <Route path="/success" component={SuccessSubmit} isPrivate />
+    <Route path="/success" component={SuccessSubmit} />
   </Switch>
 );
 
