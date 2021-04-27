@@ -47,7 +47,7 @@ const ForgotPassword: React.FC = () => {
           abortEarly: true,
         });
 
-        await api.post('/forgot', {
+        await api.post('/forgot-password', {
           user: {
             email: data.email,
             profile_type: data.profile_type,

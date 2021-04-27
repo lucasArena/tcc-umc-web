@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 
@@ -20,17 +20,17 @@ import Background from '../../components/Background';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { useToast } from '../../hooks/toast';
-import Select from '../../components/Select';
 import api from '../../services/api';
 
 interface FormProps {
-  email: string;
-  profile_type: string;
+  password: string;
+  password_confirmation: string;
 }
 
 const ResetPassword: React.FC = () => {
   const { push } = useHistory();
   const { addToast } = useToast();
+  const location = useLocation();
   const formRef = useRef<FormHandles>(null);
 
   const [isFormInvalid, setIsFormInvalid] = useState(true);
@@ -38,20 +38,28 @@ const ResetPassword: React.FC = () => {
   const handleResetPassword = useCallback(
     async (data: FormProps) => {
       try {
+        const { password, password_confirmation } = data;
+        const token = location.search.replace('?token=', '');
         const resetPasswordSchema = Yup.object().shape({
           password: Yup.string().required(),
-          password_confirmatrion: Yup.string().required(),
+          password_confirmation: Yup.string().required(),
+          token: Yup.string().required(),
         });
 
-        await resetPasswordSchema.validate(data, {
-          abortEarly: true,
-        });
-
-        await api.post('/forgot', {
-          user: {
-            email: data.email,
-            profile_type: data.profile_type,
+        await resetPasswordSchema.validate(
+          {
+            password,
+            password_confirmation,
+            token,
           },
+          {
+            abortEarly: true,
+          },
+        );
+
+        await api.post('/reset-password', {
+          password,
+          token,
         });
 
         push('/success', {
@@ -68,7 +76,7 @@ const ResetPassword: React.FC = () => {
         });
       }
     },
-    [push, addToast],
+    [push, addToast, location.search],
   );
 
   const validateForm = useCallback(async () => {
@@ -77,7 +85,7 @@ const ResetPassword: React.FC = () => {
 
       const resetPasswordSchema = Yup.object().shape({
         password: Yup.string().required(),
-        password_confirmatrion: Yup.string().required(),
+        password_confirmation: Yup.string().required(),
       });
 
       await resetPasswordSchema.validate(formData, {
@@ -111,8 +119,14 @@ const ResetPassword: React.FC = () => {
               <h2>Vamos lá, só colocar a nova senha que deseja.</h2>
             </section>
 
-            <Input name="password" placeholder="Senha" onKeyUp={validateForm} />
             <Input
+              type="password"
+              name="password"
+              placeholder="Senha"
+              onKeyUp={validateForm}
+            />
+            <Input
+              type="password"
               name="password_confirmation"
               placeholder="Confirmação de senha"
               onKeyUp={validateForm}
