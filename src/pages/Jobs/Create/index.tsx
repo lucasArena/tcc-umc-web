@@ -42,8 +42,8 @@ const Profile: React.FC = () => {
         type: {
           id: data.job_type_id,
         },
-        title: data.title.replace(/[^a-zA-Z ]+/g, ''),
-        description: data.description.replace(/[^a-zA-Z ]+/g, ''),
+        title: data.title,
+        description: data.description,
         quantity: data.quantity,
       };
 
