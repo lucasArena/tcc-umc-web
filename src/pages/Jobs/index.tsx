@@ -11,6 +11,7 @@ interface JobProps {
   id: number;
   title: string;
   company: {
+    avatar?: string;
     avatar_url?: string;
   };
 }
@@ -43,7 +44,14 @@ const Jobs: React.FC = () => {
         {jobs.map((job) => (
           <Item key={job.id} to={`/company/job/edit/${job.id}`}>
             <main>
-              <img src={job.company.avatar_url} alt={job.title} />
+              <img
+                src={
+                  job.company.avatar
+                    ? job.company.avatar_url
+                    : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
+                }
+                alt={job.title}
+              />
               <h3>{job.title}</h3>
             </main>
           </Item>

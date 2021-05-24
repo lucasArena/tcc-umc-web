@@ -280,7 +280,7 @@ const Profile: React.FC = () => {
           <input type="file" id="avatar" onChange={handleAvatarUpdate} />
           <img
             src={
-              user.avatar_url
+              user.avatar
                 ? user.avatar_url
                 : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
             }

@@ -5,6 +5,7 @@ export const Container = styled.div`
   width: 85%;
   background: ${(props) => props.theme.colors.background};
   padding: 10px 30px;
+  overflow-y: auto;
 `;
 
 export const Top = styled.section`

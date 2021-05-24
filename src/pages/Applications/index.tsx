@@ -25,12 +25,14 @@ interface JobProps {
   available: number;
   company: {
     avatar_url?: string;
+    avatar?: string;
   };
   applications: {
     id: number;
     user: {
       id: number;
       name: string;
+      avatar: string;
       avatar_url: string;
       profile: {
         resume_url: string;
@@ -122,7 +124,14 @@ const Applications: React.FC = () => {
             <main>
               <ApplicationInfo>
                 <section>
-                  <img src={job.company.avatar_url} alt={job.title} />
+                  <img
+                    src={
+                      job.company.avatar
+                        ? job.company.avatar_url
+                        : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
+                    }
+                    alt={job.title}
+                  />
                   <h3>{job.title}</h3>
                 </section>
                 <strong>{`Disponíveis: ${job.available}`}</strong>
@@ -133,7 +142,11 @@ const Applications: React.FC = () => {
                   <section key={application.id}>
                     <ApplicantInfo>
                       <img
-                        src={application.user.avatar_url}
+                        src={
+                          application.user.avatar
+                            ? application.user.avatar_url
+                            : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
+                        }
                         alt={application.user.name}
                       />
                       <h4>{application.user.name}</h4>

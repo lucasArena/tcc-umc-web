@@ -11,6 +11,7 @@ import {
 
 import api from '../../services/api';
 import JobItem from '../../components/JobItem';
+import { useAuth } from '../../hooks/auth';
 
 interface JobProps {
   id: number;
@@ -19,6 +20,7 @@ interface JobProps {
   available: number;
   company: {
     avatar_url: string;
+    avatar: string;
     profile: {
       trade_name: string;
     };
@@ -33,6 +35,7 @@ interface JobProps {
 const Landing: React.FC = () => {
   const [jobs, setJobs] = useState<JobProps[]>([]);
 
+  const { user } = useAuth();
   const { push } = useHistory();
   useEffect(() => {
     async function handleGetJobs() {
@@ -52,11 +55,13 @@ const Landing: React.FC = () => {
     <Content>
       <JobList>
         <AdvertiseContainer>
-          <section>
-            <ButtonBePremiumUser onClick={handleButtonBePremium}>
-              Transforme-se PREMIUM
-            </ButtonBePremiumUser>
-          </section>
+          {user.profile_type === 'App\\ApplicantEloquent' && (
+            <section>
+              <ButtonBePremiumUser onClick={handleButtonBePremium}>
+                Transforme-se PREMIUM
+              </ButtonBePremiumUser>
+            </section>
+          )}
         </AdvertiseContainer>
         {jobs.length ? (
           jobs.map((job) => (
