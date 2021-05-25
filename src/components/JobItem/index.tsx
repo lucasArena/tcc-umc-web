@@ -50,7 +50,7 @@ const JobItem: React.FC<JobItemProps> = ({
       <header>
         <img
           src={
-            (company && company.avatar) ||
+            (company.avatar && company.avatar_url) ||
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
           }
           alt={company.profile.trade_name}
