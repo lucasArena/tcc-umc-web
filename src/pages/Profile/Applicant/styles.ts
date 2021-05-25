@@ -190,7 +190,7 @@ export const Form = styled(UnformForm)`
   }
 `;
 
-export const UploadResumeContainer = styled.section`
+export const UploadArea = styled.section`
   label {
     cursor: pointer;
     position: relative;
@@ -226,4 +226,16 @@ export const UploadResumeContainer = styled.section`
       display: none;
     }
   }
+`;
+
+export const ResumeUploadContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ResumeLogo = styled.img`
+  width: 100px;
+  height: 100px;
 `;

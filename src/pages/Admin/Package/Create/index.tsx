@@ -13,7 +13,6 @@ import Input from '../../../../components/Input';
 import api from '../../../../services/api';
 
 import { useToast } from '../../../../hooks/toast';
-import Select from '../../../../components/Select';
 import InputMoney from '../../../../components/InputMoney';
 import getValidationErrors from '../../../../utils/getValidationErrors';
 
@@ -25,7 +24,6 @@ interface FormProps {
   type: PackageType;
   name: string;
   month_value: string;
-  year_value: string;
   quantity: number;
 }
 
@@ -45,26 +43,18 @@ const Profile: React.FC = () => {
         .replace(/\./g, '')
         .replace(/,/g, '.');
 
-      const formattedYearValue = data.year_value
-        .replace(/\s/g, '')
-        .replace(/\./g, '')
-        .replace(/,/g, '.');
-
       const dataFormatted = {
-        type: data.type,
         name: data.name,
-        month_value: formattedMonthValue,
-        year_value: formattedYearValue,
         quantity: data.quantity,
+        month_value: formattedMonthValue,
       };
 
       try {
         formRef.current?.setErrors([]);
         const schema = Yup.object().shape({
           name: Yup.string().required('Título obrigatório'),
-          type: Yup.string().required('Descrição obrigatório'),
+          quantity: Yup.number().required('Quantidade de vagas obrigatória'),
           month_value: Yup.string().required('Valor mensal obrigatório'),
-          year_value: Yup.string().required('Valor anual obrigatório'),
         });
 
         await schema.validate(dataFormatted, {
@@ -115,17 +105,6 @@ const Profile: React.FC = () => {
           </InputGroup>
 
           <InputGroup>
-            <Select
-              label="Tipo de vaga"
-              id="type"
-              name="type"
-              placeholder="Selecione"
-              width="50%"
-              options={[
-                { value: 'A', label: 'Candidato' },
-                { value: 'C', label: 'Empresa' },
-              ]}
-            />
             <Input
               type="number"
               label="Quantidade de vagas"
@@ -133,20 +112,11 @@ const Profile: React.FC = () => {
               id="quantity"
               width="50%"
             />
-          </InputGroup>
-          <InputGroup>
             <InputMoney
               prefix="R$"
               label="Valor mensal"
               id="month_value"
               name="month_value"
-              width="50%"
-            />
-            <InputMoney
-              prefix="R$"
-              label="Valor ano"
-              id="year_value"
-              name="year_value"
               width="50%"
             />
           </InputGroup>

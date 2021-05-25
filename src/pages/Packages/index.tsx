@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useToast } from '../../hooks/toast';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';

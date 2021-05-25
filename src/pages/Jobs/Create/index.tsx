@@ -83,7 +83,7 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [addToast, push, user.profile.id],
+    [addToast, push, user.profile.id, user.profile_type],
   );
 
   return (
@@ -116,16 +116,18 @@ const Profile: React.FC = () => {
               id="job_type_id"
               name="job_type_id"
               placeholder="Selecione"
-              width="100%"
+              width="50%"
               options={[
                 { value: '1', label: 'CLT' },
                 { value: '2', label: 'PJ' },
               ]}
             />
-          </InputGroup>
-
-          <InputGroup>
-            <Input label="Quantidade" name="quantity" id="quantity" />
+            <Input
+              label="Quantidade"
+              name="quantity"
+              id="quantity"
+              width="50%"
+            />
           </InputGroup>
         </fieldset>
         <footer>

@@ -126,15 +126,18 @@ const Profile: React.FC = () => {
               id="type[id]"
               name="type[id]"
               placeholder="Selecione"
-              width="100%"
+              width="50%"
               options={[
                 { value: '1', label: 'CLT' },
                 { value: '2', label: 'PJ' },
               ]}
             />
-          </InputGroup>
-          <InputGroup>
-            <Input label="Quantidade" name="quantity" id="quantity" />
+            <Input
+              label="Quantidade"
+              name="quantity"
+              id="quantity"
+              width="50%"
+            />
           </InputGroup>
         </fieldset>
         <footer>

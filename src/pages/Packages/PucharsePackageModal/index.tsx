@@ -4,7 +4,6 @@ import { FiCheckSquare } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from './styles';
 import Modal from '../../../components/Modal';
-import getMoneyValue from '../../../utils/getMoneyValue';
 
 interface IPackageProps {
   id: string;

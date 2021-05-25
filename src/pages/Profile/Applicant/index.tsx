@@ -9,17 +9,19 @@ import { FiCamera, FiUpload } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { cpf as cpfValidator } from 'cpf-cnpj-validator';
 import * as Yup from 'yup';
-import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 
 import { parseISO, isValid, format } from 'date-fns';
 import {
   ProfileInfo,
   AvatarContainer,
   Form,
-  UploadResumeContainer,
+  UploadArea,
+  ResumeUploadContainer,
+  ResumeLogo,
 } from './styles';
 
 import warningIcon from '../../../assets/images/icons/warning.svg';
+import pdfIcon from '../../../assets/images/icons/pdf.svg';
 
 import InputGroup from '../../../components/InputGroup';
 import Input from '../../../components/Input';
@@ -379,27 +381,40 @@ const Profile: React.FC = () => {
 
         <fieldset>
           <legend>Curriculo</legend>
-          <InputGroup>
-            <UploadResumeContainer>
-              <label htmlFor="resume">
-                <span>Upload do currículo</span>
-                <FiUpload />
-                <input
-                  type="file"
-                  id="resume"
-                  accept="application/pdf,application/vnd.ms-excel"
-                  onChange={handleUpdateResume}
-                />
-              </label>
-            </UploadResumeContainer>
-          </InputGroup>
+          <ResumeUploadContainer>
+            <InputGroup
+              additionalStyles={{ diplay: 'flex', justifyContent: 'center' }}
+            >
+              <UploadArea>
+                <label htmlFor="resume">
+                  <span>Upload do currículo</span>
+                  <FiUpload />
+                  <input
+                    type="file"
+                    id="resume"
+                    accept="application/pdf,application/vnd.ms-excel"
+                    onChange={handleUpdateResume}
+                  />
+                </label>
+              </UploadArea>
+            </InputGroup>
 
-          <InputGroup>
-            <Document file={user.profile.resume_url}>
-              <Page width={620} pageNumber={1} />
-            </Document>
-          </InputGroup>
-          {/* </PDFViewer> */}
+            <InputGroup
+              additionalStyles={{ diplay: 'flex', justifyContent: 'center' }}
+            >
+              {user.profile.resume ? (
+                <a
+                  href={user.profile.resume_url}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <ResumeLogo src={pdfIcon} alt="Logo de pdf" />
+                </a>
+              ) : (
+                <span>Nenhum currículo cadastrado</span>
+              )}
+            </InputGroup>
+          </ResumeUploadContainer>
         </fieldset>
         <footer>
           <p>
