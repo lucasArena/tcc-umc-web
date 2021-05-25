@@ -60,7 +60,7 @@ export const DropDown = styled.div<IDropDown>`
 
   width: 256px;
   border-radius: 10px;
-  opacity: ${({ isOpen }) => (isOpen ? '100%' : '0')};
+  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
   transition: opacity 0.2s ease 0s, visibility 0.2s ease 0s;
 
   &::before {
