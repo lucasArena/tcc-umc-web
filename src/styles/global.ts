@@ -9,17 +9,15 @@ export default createGlobalStyle`
 
   html, body, #root {
     height: 100%;
+    margin: 0;
+
   }
 
   body {
     background: ${(props) => props.theme.colors.background};
   }
-
-  :root {
-    font-size: 60%;
-  }
-
   #root {
+    font-size: 100%;
     display: flex;
     justify-content: center;
   }
