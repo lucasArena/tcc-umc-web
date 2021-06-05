@@ -18,6 +18,7 @@ const Input: React.FC<InputProps> = ({
   name,
   icon,
   width,
+  disabled,
   iconAction,
   ...rest
 }) => {
@@ -35,12 +36,13 @@ const Input: React.FC<InputProps> = ({
   return (
     <Container width={width}>
       <label htmlFor={id}>{label}</label>
-      <InputContainer error={!!error}>
+      <InputContainer error={!!error} disabled={Boolean(disabled)}>
         <input
           ref={inputRef}
           defaultValue={defaultValue}
           name={name}
           id={id}
+          disabled={disabled}
           {...rest}
         />
         {icon && (

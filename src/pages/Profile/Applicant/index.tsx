@@ -386,7 +386,7 @@ const Profile: React.FC = () => {
             <Input label="Nome" name="name" id="name" />
           </InputGroup>
           <InputGroup>
-            <Input label="Email" name="email" id="email" width="75%" />
+            <Input label="Email" name="email" id="email" width="75%" disabled />
             <InputMask
               mask="99/99/9999"
               label="Data de nascimento"

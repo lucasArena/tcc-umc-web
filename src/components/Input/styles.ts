@@ -6,6 +6,7 @@ interface ContainerProps {
 
 interface InputContainerProps {
   error: boolean;
+  disabled: boolean;
 }
 
 export const Container = styled.section<ContainerProps>`
@@ -37,6 +38,16 @@ export const InputContainer = styled.div<InputContainerProps>`
     props.error &&
     css`
       border: 1px solid ${props.theme.colors.deleteButtonText};
+    `}
+
+  ${(props) =>
+    props.disabled &&
+    css`
+      cursor: not-allowed;
+      input {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
     `}
 
   input {
