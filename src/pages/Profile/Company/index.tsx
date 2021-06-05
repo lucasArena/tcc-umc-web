@@ -10,7 +10,13 @@ import { FormHandles } from '@unform/core';
 import { cnpj as CNPJValidator } from 'cpf-cnpj-validator';
 import * as Yup from 'yup';
 
-import { Container, ProfileInfo, AvatarContainer, Form } from './styles';
+import {
+  Container,
+  ProfileInfo,
+  AvatarContainer,
+  Form,
+  SubmitButton,
+} from './styles';
 
 import warningIcon from '../../../assets/images/icons/warning.svg';
 
@@ -20,6 +26,7 @@ import InputMask from '../../../components/InputMask';
 
 import api from '../../../services/api';
 
+import { useLoad } from '../../../hooks/load';
 import { useAuth } from '../../../hooks/auth';
 import { useToast } from '../../../hooks/toast';
 import getValidationErrors from '../../../utils/getValidationErrors';
@@ -36,27 +43,77 @@ interface FormProps {
 
 const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { isLoading, handleLoading } = useLoad();
   const { addToast } = useToast();
   const { user, updateUser } = useAuth();
 
   const [id] = useState(user.id);
   const [userData, setUserData] = useState<FormProps>({} as FormProps);
 
+  const handleValidateCNPJ = useCallback(
+    async (value: string): Promise<void> => {
+      try {
+        const cnpjFormatted = value.replace(/\D/g, '');
+        const errorAlreadySet: any = formRef.current?.getErrors();
+
+        if (user.profile.cnpj === cnpjFormatted) {
+          delete errorAlreadySet['profile[cnpj]'];
+          formRef.current?.setErrors(errorAlreadySet);
+          return;
+        }
+
+        if (!cnpjFormatted || 'profile[cnpj]' in errorAlreadySet) {
+          return;
+        }
+
+        await api.get(`/companies/cnpj/${cnpjFormatted}`);
+      } catch (error) {
+        formRef.current?.setErrors({ 'profile[cnpj]': 'CNPJ já existente' });
+
+        handleLoading(false);
+        addToast({
+          title: 'CNPJ',
+          description: 'CNPJ já existente',
+          type: 'error',
+        });
+      }
+    },
+    [addToast, user.profile.cnpj, handleLoading],
+  );
+
   const handleSubmit = useCallback(
     async (data: FormProps) => {
-      const formattedCNPJ = data.profile.cnpj.replace(/[A-Za-z]\s/g, '');
-
-      const dataFormatted = {
-        name: data.name.replace(/[^a-zA-Z ]+/g, ''),
-        email: data.email,
-        profile: {
-          trade_name: data.profile.trade_name,
-          cnpj: formattedCNPJ,
-        },
-      };
-
       try {
+        handleLoading(true);
         formRef.current?.setErrors([]);
+
+        const cnpjFormatted = data.profile.cnpj.replace(/\D/g, '');
+        const dataFormatted = {
+          ...data,
+          profile: {
+            ...data.profile,
+            cnpj: cnpjFormatted,
+          },
+        };
+
+        try {
+          if (cnpjFormatted && user.profile.cnpj !== cnpjFormatted) {
+            await api.get(`/companies/cnpj/${cnpjFormatted}`);
+          }
+        } catch (error) {
+          formRef.current?.setErrors({
+            'profile[cnpj]': 'CNPJ já existente',
+          });
+
+          handleLoading(false);
+          addToast({
+            title: 'CNPJ',
+            description: 'CNPJ já existente',
+            type: 'error',
+          });
+          return;
+        }
+
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome obrigatório'),
           email: Yup.string()
@@ -97,6 +154,7 @@ const Profile: React.FC = () => {
 
         updateUser(userUpdated.data);
 
+        handleLoading(false);
         addToast({
           title: 'Successo',
           description: 'Usuário atualizado com sucesso',
@@ -105,7 +163,7 @@ const Profile: React.FC = () => {
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
-          console.log(err);
+          console.log(errors);
           formRef.current?.setErrors(errors);
 
           err.errors.forEach((error) => {
@@ -115,9 +173,11 @@ const Profile: React.FC = () => {
               type: 'error',
             });
           });
+          handleLoading(false);
           return;
         }
 
+        handleLoading(false);
         addToast({
           title: 'Erro',
           description: `Erro ao tentar atualizar o cadastro`,
@@ -125,7 +185,7 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [id, addToast, updateUser],
+    [id, addToast, updateUser, handleLoading, user.profile.cnpj],
   );
 
   const handleAvatarUpdate = useCallback(
@@ -210,13 +270,14 @@ const Profile: React.FC = () => {
             <Input label="Nome" name="name" id="name" />
           </InputGroup>
           <InputGroup>
-            <Input label="Email" name="email" id="email" width="50%" />
+            <Input label="Email" name="email" id="email" width="50%" disabled />
             <InputMask
               mask="99.999.999/9999-99"
               label="CNPJ"
               name="profile[cnpj]"
               id="cnpj"
               width="40%"
+              onBlur={(e) => handleValidateCNPJ(e.target.value)}
             />
           </InputGroup>
 
@@ -235,7 +296,9 @@ const Profile: React.FC = () => {
             <br />
             Preencha todos os dados
           </p>
-          <button type="submit">Atualizar</button>
+          <SubmitButton type="submit" disabled={isLoading}>
+            {isLoading ? 'Processando...' : 'Atualizar'}
+          </SubmitButton>
         </footer>
       </Form>
     </Container>

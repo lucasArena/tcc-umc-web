@@ -17,7 +17,7 @@ interface JobItemProps {
     };
   };
   applications: {
-    user: {
+    applicant: {
       id: number;
     };
   }[];
@@ -35,7 +35,7 @@ const JobItem: React.FC<JobItemProps> = ({
 
   const isSignup = useMemo(() => {
     return !!applications.find((applicantion) => {
-      return applicantion.user.id === user.id;
+      return applicantion.applicant.id === user.profile.id;
     });
   }, [user, applications]);
 

@@ -28,6 +28,7 @@ const InputMoney: React.FC<InputMoneyProps> = ({
   const [inputMoney, setInputMoney] = useState(defaultValue || '');
   const handleMask = useCallback((value: string) => {
     if (!value) {
+      setInputMoney('');
       return 0.0;
     }
 

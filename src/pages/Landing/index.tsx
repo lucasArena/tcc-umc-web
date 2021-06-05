@@ -26,7 +26,7 @@ interface JobProps {
     };
   };
   applications: {
-    user: {
+    applicant: {
       id: number;
     };
   }[];

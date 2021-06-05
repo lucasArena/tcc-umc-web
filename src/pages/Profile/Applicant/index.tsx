@@ -18,6 +18,7 @@ import {
   UploadArea,
   ResumeUploadContainer,
   ResumeLogo,
+  SubmitButton,
 } from './styles';
 
 import warningIcon from '../../../assets/images/icons/warning.svg';
@@ -34,7 +35,12 @@ import InputMoney from '../../../components/InputMoney';
 import { useAuth } from '../../../hooks/auth';
 import { useToast } from '../../../hooks/toast';
 import getValidationErrors from '../../../utils/getValidationErrors';
+import { useLoad } from '../../../hooks/load';
 
+interface SelectProps {
+  value: string;
+  label: string;
+}
 interface FormProps {
   name: string;
   email: string;
@@ -50,24 +56,62 @@ interface FormProps {
   resume_url: string;
 }
 
+interface CountriesProps {
+  id: number;
+  name: string;
+}
+
 const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { isLoading, handleLoading } = useLoad();
   const { addToast } = useToast();
   const { user, updateUser } = useAuth();
 
   const [id] = useState(user.id);
   const [userData, setUserData] = useState<FormProps>({} as FormProps);
+  const [countries, setCountries] = useState<SelectProps[]>([]);
+
+  const handleValidateCPF = useCallback(
+    async (value: string): Promise<void> => {
+      try {
+        const cpfFormatted = value.replace(/\D/g, '');
+        const errorAlreadySet: any = formRef.current?.getErrors();
+
+        if (user.profile.cpf === cpfFormatted) {
+          delete errorAlreadySet.cpf;
+          formRef.current?.setErrors(errorAlreadySet);
+          return;
+        }
+
+        if (!cpfFormatted || 'cpf' in errorAlreadySet) {
+          return;
+        }
+
+        await api.get(`/applicants/cpf/${cpfFormatted}`);
+      } catch (error) {
+        formRef.current?.setErrors({ cpf: 'CPF já existente ' });
+
+        addToast({
+          title: 'CPF',
+          description: 'CPF já existente',
+          type: 'error',
+        });
+      }
+    },
+    [addToast, user.profile.cpf],
+  );
 
   const handleSubmit = useCallback(
     async (data: FormProps) => {
       formRef.current?.setErrors([]);
+      handleLoading(true);
 
       const formattedSalaryExpectations = data.salary_expectations
         .replace(/\s/g, '')
         .replace(/\./g, '')
         .replace(/,/g, '.');
 
-      const formattedCPF = data.cpf.replace(/[A-Za-z]\s/g, '');
+      const formattedCPF = data.cpf.replace(/\D/g, '');
       const formattedBorn = data.born.split('/').reverse().join('-');
 
       const dataFormatted = {
@@ -83,7 +127,23 @@ const Profile: React.FC = () => {
       };
 
       try {
-        formRef.current?.setErrors([]);
+        try {
+          if (dataFormatted.cpf && user.profile.cpf !== dataFormatted.cpf) {
+            await api.get(`/applicants/cpf/${dataFormatted.cpf}`);
+          }
+        } catch (error) {
+          formRef.current?.setErrors({ cpf: 'CPF já existente ' });
+
+          addToast({
+            title: 'CPF',
+            description: 'CPF já existente',
+            type: 'error',
+          });
+
+          handleLoading(false);
+          return;
+        }
+
         const schema = Yup.object().shape({
           born: Yup.string().test(
             'born_date',
@@ -156,10 +216,11 @@ const Profile: React.FC = () => {
         updateUser(userUpdated.data);
 
         addToast({
+          type: 'success',
           title: 'Successo',
           description: 'Usuário atualizado com sucesso',
-          type: 'success',
         });
+        handleLoading(false);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -180,9 +241,17 @@ const Profile: React.FC = () => {
           description: `Erro ao tentar atualizar o cadastro`,
           type: 'error',
         });
+        handleLoading(false);
       }
     },
-    [id, user.profile.id, addToast, updateUser],
+    [
+      id,
+      user.profile.id,
+      user.profile.cpf,
+      addToast,
+      updateUser,
+      handleLoading,
+    ],
   );
 
   const handleAvatarUpdate = useCallback(
@@ -206,7 +275,7 @@ const Profile: React.FC = () => {
   );
 
   const handleUpdateResume = useCallback(
-    async (e: ChangeEvent<HTMLInputElement>) => {
+    async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
       if (e.target.files) {
         const resumeFormData = new FormData();
 
@@ -228,9 +297,13 @@ const Profile: React.FC = () => {
   useEffect(() => {
     async function handleGetUser() {
       try {
-        const responseUserData = await api.get(`/users/${id}`);
+        const [responseUserData, responseCountriesData] = await Promise.all([
+          api.get(`/users/${id}`),
+          api.get<CountriesProps[]>(`/countries`),
+        ]);
 
         const userInfo = responseUserData.data;
+        const countriesInfo = responseCountriesData.data;
 
         const {
           name,
@@ -259,10 +332,21 @@ const Profile: React.FC = () => {
           born: born && format(parseISO(born), 'dd/MM/Y'),
           bio,
           civil_state,
-          salary_expectations,
+          salary_expectations: Number(salary_expectations).toFixed(2),
           contract,
           resume_url,
         });
+
+        const countriesFormatted = countriesInfo.map(
+          (country: CountriesProps) => {
+            return {
+              value: String(country.id),
+              label: country.name,
+            };
+          },
+        );
+
+        setCountries(countriesFormatted);
       } catch (err) {
         console.log(err);
         addToast({
@@ -309,6 +393,7 @@ const Profile: React.FC = () => {
               name="born"
               id="born"
               width="25%"
+              disabled
             />
           </InputGroup>
 
@@ -319,6 +404,7 @@ const Profile: React.FC = () => {
               name="cpf"
               id="cpf"
               width="40%"
+              onBlur={(e) => handleValidateCPF(e.target.value)}
             />
             <Select
               label="Estado civil"
@@ -344,10 +430,12 @@ const Profile: React.FC = () => {
               id="nationality"
               width="30%"
               placeholder="Selecione"
-              options={[
-                { value: '1', label: 'Brasil' },
-                { value: '2', label: 'Estados Unidos' },
-              ]}
+              options={countries.map((country) => {
+                return {
+                  value: country.value,
+                  label: country.label,
+                };
+              })}
             />
           </InputGroup>
         </fieldset>
@@ -374,6 +462,8 @@ const Profile: React.FC = () => {
               options={[
                 { value: 'CLT', label: 'CLT' },
                 { value: 'PJ', label: 'PJ' },
+                { value: 'Freelance', label: 'Freelance' },
+                { value: 'Temporário', label: 'Temporario' },
               ]}
             />
           </InputGroup>
@@ -404,7 +494,7 @@ const Profile: React.FC = () => {
             >
               {user.profile.resume ? (
                 <a
-                  href={user.profile.resume_url}
+                  href={String(user.profile.resume_url)}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -423,7 +513,9 @@ const Profile: React.FC = () => {
             <br />
             Preencha todos os dados
           </p>
-          <button type="submit">Atualizar</button>
+          <SubmitButton type="submit" disabled={isLoading}>
+            {isLoading ? 'Processando...' : 'Atualizar'}
+          </SubmitButton>
         </footer>
       </Form>
     </>

@@ -24,12 +24,12 @@ export const Container = styled.div<ButtonProps>`
 
     &:hover {
       background: ${(props) =>
-    !props.disabled && props.theme.colors.secundaryDark};
+        !props.disabled && props.theme.colors.secundaryDark};
     }
 
     ${(props) =>
-    props.disabled &&
-    css`
+      props.disabled &&
+      css`
         background: ${props.theme.colors.buttonDisabled};
         color: ${props.theme.colors.textComplement};
         cursor: not-allowed;

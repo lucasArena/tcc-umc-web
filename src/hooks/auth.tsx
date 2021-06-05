@@ -9,7 +9,7 @@ interface User {
   avatar_url?: string;
   profile_type: string;
   profile: {
-    [key: string]: string;
+    [key: string]: string | number;
   };
 }
 
