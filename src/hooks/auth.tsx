@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import api from '../services/api';
 
-interface User {
+export interface User {
   id: number;
   name: string;
   email: string;
@@ -9,7 +9,7 @@ interface User {
   avatar_url?: string;
   profile_type: string;
   profile: {
-    [key: string]: string | number;
+    [key: string]: string | number | any;
   };
 }
 

@@ -51,3 +51,8 @@ export const Form = styled(Unform)`
     }
   }
 `;
+
+export const DowngradeWarning = styled.h3`
+  color: ${({ theme }) => theme.colors.deleteButtonText};
+  margin-bottom: 20px;
+`;

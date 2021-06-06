@@ -119,6 +119,7 @@ const Packages: React.FC = () => {
     setPurchasePackage(packageData);
     setPurchaseModalOpen(!purchaseModalOpen);
   }
+
   async function handleConfirmPurchase(packageId: string) {
     try {
       await api.post('/payments', {
@@ -173,6 +174,7 @@ const Packages: React.FC = () => {
           setIsOpen={toggleModal}
           handleConfirmPurchase={handleConfirmPurchase}
           purchasePackage={purchasePackage}
+          userPackage={user.profile.package}
         />
         {packages.map((packageData) => {
           return (
