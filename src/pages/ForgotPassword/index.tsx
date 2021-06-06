@@ -22,6 +22,7 @@ import Button from '../../components/Button';
 import { useToast } from '../../hooks/toast';
 import Select from '../../components/Select';
 import api from '../../services/api';
+import { useLoad } from '../../hooks/load';
 
 interface FormProps {
   email: string;
@@ -29,6 +30,7 @@ interface FormProps {
 }
 
 const ForgotPassword: React.FC = () => {
+  const { isLoading, handleLoading } = useLoad();
   const { push } = useHistory();
   const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
@@ -38,6 +40,7 @@ const ForgotPassword: React.FC = () => {
   const handleForgotPassword = useCallback(
     async (data: FormProps) => {
       try {
+        handleLoading(true);
         const forgotPasswordSchema = Yup.object().shape({
           profile_type: Yup.string().required('Tipo é obrigatório'),
           email: Yup.string().email().required('E-mail é obrigatório'),
@@ -54,6 +57,7 @@ const ForgotPassword: React.FC = () => {
           },
         });
 
+        handleLoading(false);
         push('/success', {
           title: 'Redefinição enviada!',
           description:
@@ -62,6 +66,7 @@ const ForgotPassword: React.FC = () => {
           buttonText: 'Voltar ao login',
         });
       } catch (err) {
+        handleLoading(false);
         addToast({
           type: 'error',
           title: 'Erro',
@@ -69,7 +74,7 @@ const ForgotPassword: React.FC = () => {
         });
       }
     },
-    [push, addToast],
+    [push, addToast, handleLoading],
   );
 
   const validateForm = useCallback(async () => {
@@ -118,7 +123,9 @@ const ForgotPassword: React.FC = () => {
             <Input name="email" placeholder="Email" onKeyUp={validateForm} />
 
             <ButtonContainer>
-              <Button disabled={isFormInvalid}>Enviar</Button>
+              <Button disabled={isFormInvalid || isLoading}>
+                {isLoading ? 'Processando...' : 'Enviar'}
+              </Button>
             </ButtonContainer>
           </FormSignup>
         </FormContent>

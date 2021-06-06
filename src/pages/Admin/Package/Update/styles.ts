@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Form as UnformForm } from '@unform/web';
+import Button from '../../../../components/Button';
 
 export const Container = styled.div`
   width: 100vw;
@@ -121,26 +122,6 @@ export const Form = styled(UnformForm)`
       }
     }
 
-    button {
-      width: 100%;
-      height: 5.6rem;
-      background: ${(props) => props.theme.colors.secundary};
-      color: ${(props) => props.theme.colors.buttonText};
-      border: 0;
-      border-radius: 0.8rem;
-      cursor: pointer;
-      font: 700 1.6rem Archivo;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.2s;
-      margin-top: 3.2rem;
-
-      &:hover {
-        background: ${(props) => props.theme.colors.secundaryDark};
-      }
-    }
-
     @media (min-width: 700px) {
       max-width: 100vw;
       padding: 4rem 6.4rem;
@@ -197,3 +178,5 @@ export const UploadResumeContainer = styled.section`
     }
   }
 `;
+
+export const ButtonSubmit = styled(Button)``;

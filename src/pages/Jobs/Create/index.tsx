@@ -12,6 +12,7 @@ import Input from '../../../components/Input';
 
 import api from '../../../services/api';
 
+import { useLoad } from '../../../hooks/load';
 import { useAuth } from '../../../hooks/auth';
 import { useToast } from '../../../hooks/toast';
 import Textarea from '../../../components/TextArea';
@@ -26,6 +27,7 @@ interface FormProps {
 
 const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { isLoading, handleLoading } = useLoad();
   const { addToast } = useToast();
   const { push } = useHistory();
   const { user } = useAuth();
@@ -48,6 +50,7 @@ const Profile: React.FC = () => {
       };
 
       try {
+        handleLoading(true);
         formRef.current?.setErrors([]);
         const schema = Yup.object().shape({
           company: Yup.object().shape({
@@ -67,6 +70,7 @@ const Profile: React.FC = () => {
 
         await api.post(`/jobs`, dataFormatted);
 
+        handleLoading(false);
         addToast({
           title: 'Successo',
           description: 'Vaga criada com sucesso',
@@ -76,6 +80,8 @@ const Profile: React.FC = () => {
         push('/company/jobs');
       } catch (err) {
         console.log(err);
+
+        handleLoading(false);
         addToast({
           title: 'Erro',
           description: 'Erro ao tentar criar a vaga',
@@ -83,7 +89,7 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [addToast, push, user.profile.id, user.profile_type],
+    [addToast, push, user.profile.id, user.profile_type, handleLoading],
   );
 
   return (
@@ -137,7 +143,9 @@ const Profile: React.FC = () => {
             <br />
             Preencha todos os dados
           </p>
-          <button type="submit">Criar</button>
+          <button type="submit">
+            {isLoading ? 'Processando...' : 'Editar'}
+          </button>
         </footer>
       </Form>
     </Container>

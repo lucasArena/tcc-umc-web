@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 
 import { useHistory, useParams } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
-import { Container, Form } from './styles';
+import { Container, Form, ButtonSubmit } from './styles';
 
 import warningIcon from '../../../../assets/images/icons/warning.svg';
 
@@ -15,6 +15,7 @@ import api from '../../../../services/api';
 import { useToast } from '../../../../hooks/toast';
 import InputMoney from '../../../../components/InputMoney';
 import getValidationErrors from '../../../../utils/getValidationErrors';
+import { useLoad } from '../../../../hooks/load';
 
 interface PackageType {
   id: string;
@@ -28,6 +29,7 @@ interface FormProps {
 
 const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { isLoading, handleLoading } = useLoad();
   const { addToast } = useToast();
   const { push } = useHistory();
   const { packageId } = useParams();
@@ -50,6 +52,7 @@ const Profile: React.FC = () => {
       };
 
       try {
+        handleLoading(true);
         formRef.current?.setErrors([]);
         const schema = Yup.object().shape({
           name: Yup.string().required('Título obrigatório'),
@@ -71,6 +74,7 @@ const Profile: React.FC = () => {
           type: 'success',
         });
 
+        handleLoading(false);
         push('/admin/packages');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -87,6 +91,7 @@ const Profile: React.FC = () => {
           return;
         }
 
+        handleLoading(false);
         addToast({
           title: 'Erro',
           description: 'Erro ao tentar alterar o pacote',
@@ -106,7 +111,7 @@ const Profile: React.FC = () => {
       setJob({
         name,
         quantity,
-        month_value: monthValue,
+        month_value: monthValue.toFixed(2),
       });
     }
 
@@ -146,7 +151,9 @@ const Profile: React.FC = () => {
             <br />
             Preencha todos os dados
           </p>
-          <button type="submit">Editar</button>
+          <ButtonSubmit type="submit" disabled={isLoading}>
+            {isLoading ? 'Processando...' : 'Editar'}
+          </ButtonSubmit>
         </footer>
       </Form>
     </Container>

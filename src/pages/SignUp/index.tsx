@@ -25,9 +25,11 @@ import Select from '../../components/Select';
 
 import api from '../../services/api';
 import { useToast } from '../../hooks/toast';
+import { useLoad } from '../../hooks/load';
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { isLoading, handleLoading } = useLoad();
   const { addToast } = useToast();
   const { push } = useHistory();
 
@@ -38,6 +40,7 @@ const SignUp: React.FC = () => {
   const handleSignup = useCallback(
     async (data) => {
       try {
+        handleLoading(true);
         const { profile_type, name, email, phone, password } = data;
 
         const signUpSchema = Yup.object().shape({
@@ -68,6 +71,7 @@ const SignUp: React.FC = () => {
           type: 'success',
         });
       } catch (err) {
+        handleLoading(false);
         addToast({
           title: 'Erro',
           description: 'Erro ao tentar criar o usuário',
@@ -75,7 +79,7 @@ const SignUp: React.FC = () => {
         });
       }
     },
-    [push, addToast],
+    [push, addToast, handleLoading],
   );
 
   const handleShowPassword = useCallback(() => {
@@ -131,10 +135,6 @@ const SignUp: React.FC = () => {
               <h2>Preencha os dados abaixo para começar.</h2>
             </section>
 
-            {/* <Tabs>
-              <Tab selected>Sou usuário</Tab>
-              <Tab selected={false}>Sou Anunciante</Tab>
-            </Tabs> */}
             <Select
               name="profile_type"
               id="profile_type"
@@ -173,7 +173,9 @@ const SignUp: React.FC = () => {
             />
 
             <ButtonContainer>
-              <Button disabled={isFormInvalid}>Concluir cadastro</Button>
+              <Button disabled={isFormInvalid || isLoading}>
+                {isLoading ? 'Processando...' : 'Concluir cadastro'}
+              </Button>
             </ButtonContainer>
           </FormSignup>
         </FormContent>

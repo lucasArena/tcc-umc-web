@@ -26,6 +26,7 @@ import Checkbox from '../../components/Checkbox';
 
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
+import { useLoad } from '../../hooks/load';
 
 interface CredencialsProps {
   email: string;
@@ -35,6 +36,7 @@ interface CredencialsProps {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { push } = useHistory();
+  const { isLoading, handleLoading } = useLoad();
   const { signIn } = useAuth();
   const { addToast } = useToast();
 
@@ -45,6 +47,7 @@ const SignIn: React.FC = () => {
   const handleSignin = useCallback(
     async (data: CredencialsProps) => {
       try {
+        handleLoading(true);
         const { email, password } = data;
 
         const signInSchema = Yup.object().shape({
@@ -61,8 +64,10 @@ const SignIn: React.FC = () => {
           password,
         });
 
+        handleLoading(false);
         push('/landing');
       } catch (err) {
+        handleLoading(false);
         addToast({
           title: 'Erro',
           description: 'Email/Senha inválida',
@@ -70,7 +75,7 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [signIn, addToast, push],
+    [signIn, addToast, push, handleLoading],
   );
 
   const handleShowPassword = useCallback(() => {
@@ -145,7 +150,9 @@ const SignIn: React.FC = () => {
               </div>
             </AuxiliaryActions>
 
-            <Button disabled={isFormInvalid}>Entrar</Button>
+            <Button disabled={isFormInvalid || isLoading}>
+              {isLoading ? 'Processando...' : 'Entrar'}
+            </Button>
           </FormSignin>
           <Footer>
             <section>

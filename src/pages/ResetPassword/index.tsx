@@ -21,6 +21,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { useToast } from '../../hooks/toast';
 import api from '../../services/api';
+import { useLoad } from '../../hooks/load';
 
 interface FormProps {
   password: string;
@@ -29,6 +30,7 @@ interface FormProps {
 
 const ResetPassword: React.FC = () => {
   const { push } = useHistory();
+  const { isLoading, handleLoading } = useLoad();
   const { addToast } = useToast();
   const location = useLocation();
   const formRef = useRef<FormHandles>(null);
@@ -38,6 +40,7 @@ const ResetPassword: React.FC = () => {
   const handleResetPassword = useCallback(
     async (data: FormProps) => {
       try {
+        handleLoading(true);
         const { password, password_confirmation } = data;
         const token = location.search.replace('?token=', '');
         const resetPasswordSchema = Yup.object().shape({
@@ -62,6 +65,7 @@ const ResetPassword: React.FC = () => {
           token,
         });
 
+        handleLoading(false);
         push('/success', {
           title: 'Redefinição de senha realizada com sucesso',
           description: 'Boa, agora é só se logar novamente com a nova senha.',
@@ -69,6 +73,8 @@ const ResetPassword: React.FC = () => {
           buttonText: 'Voltar ao login',
         });
       } catch (err) {
+        handleLoading(false);
+
         addToast({
           type: 'error',
           title: 'Erro',
@@ -133,7 +139,9 @@ const ResetPassword: React.FC = () => {
             />
 
             <ButtonContainer>
-              <Button disabled={isFormInvalid}>Resetar</Button>
+              <Button disabled={isFormInvalid || isLoading}>
+                {isLoading ? 'Processando...' : 'Resetar'}
+              </Button>
             </ButtonContainer>
           </FormSignup>
         </FormContent>
