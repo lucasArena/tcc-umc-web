@@ -5,7 +5,9 @@ import { useAuth } from '../../hooks/auth';
 
 import api from '../../services/api';
 
-import { Container, Top, TitleSection, Main, Item } from './styles';
+import { Container, Top, TitleSection, Main, Item, NoResults } from './styles';
+
+import noResultIcon from '../../assets/images/no-results.svg';
 
 interface JobProps {
   id: number;
@@ -41,21 +43,28 @@ const Jobs: React.FC = () => {
         <h2>Vagas</h2>
       </TitleSection>
       <Main>
-        {jobs.map((job) => (
-          <Item key={job.id} to={`/company/job/edit/${job.id}`}>
-            <main>
-              <img
-                src={
-                  job.company.avatar
-                    ? job.company.avatar_url
-                    : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
-                }
-                alt={job.title}
-              />
-              <h3>{job.title}</h3>
-            </main>
-          </Item>
-        ))}
+        {jobs.length ? (
+          jobs.map((job) => (
+            <Item key={job.id} to={`/company/job/edit/${job.id}`}>
+              <main>
+                <img
+                  src={
+                    job.company.avatar
+                      ? job.company.avatar_url
+                      : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
+                  }
+                  alt={job.title}
+                />
+                <h3>{job.title}</h3>
+              </main>
+            </Item>
+          ))
+        ) : (
+          <NoResults>
+            <img src={noResultIcon} alt="No results found logo" />
+            <h2>Não há vagas cadastradas</h2>
+          </NoResults>
+        )}
       </Main>
     </Container>
   );

@@ -99,7 +99,7 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [addToast, push, packageId],
+    [addToast, push, packageId, handleLoading],
   );
 
   useEffect(() => {

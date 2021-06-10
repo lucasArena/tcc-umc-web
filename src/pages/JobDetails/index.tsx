@@ -120,7 +120,7 @@ const JobDetails: React.FC = () => {
       return '';
     }
 
-    const dateFormatted = format(parseISO(job.created_at), 'dd/M/Y');
+    const dateFormatted = format(parseISO(job.created_at), 'dd/MM/Y');
 
     return dateFormatted;
   }, [job.created_at]);

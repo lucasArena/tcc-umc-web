@@ -5,6 +5,8 @@ import api from '../../services/api';
 import getMoneyValue from '../../utils/getMoneyValue';
 import PurchasePackageModal from './PucharsePackageModal';
 
+import noResultIcon from '../../assets/images/no-results.svg';
+
 import {
   Content,
   Title,
@@ -12,6 +14,7 @@ import {
   PackageList,
   PackageContainer,
   PackageButton,
+  NoResults,
 } from './styles';
 
 interface IPackageProps {
@@ -176,26 +179,33 @@ const Packages: React.FC = () => {
           purchasePackage={purchasePackage}
           userPackage={user.profile.package}
         />
-        {packages.map((packageData) => {
-          return (
-            <PackageContainer key={packageData.id}>
-              <h2>{packageData.name}</h2>
-              <div>
-                <p>
-                  Limite para candidaturas:
-                  {packageData.quantity}
-                </p>
-                <span>{getMoneyValue(packageData.monthValue)}</span>
-              </div>
-              <PackageButton
-                disabled={packageData.disabled}
-                onClick={() => handleSelectPackage(packageData)}
-              >
-                {packageData.buttonMessage()}
-              </PackageButton>
-            </PackageContainer>
-          );
-        })}
+        {packages.length ? (
+          packages.map((packageData) => {
+            return (
+              <PackageContainer key={packageData.id}>
+                <h2>{packageData.name}</h2>
+                <div>
+                  <p>
+                    Limite para candidaturas:
+                    {packageData.quantity}
+                  </p>
+                  <span>{getMoneyValue(packageData.monthValue)}</span>
+                </div>
+                <PackageButton
+                  disabled={packageData.disabled}
+                  onClick={() => handleSelectPackage(packageData)}
+                >
+                  {packageData.buttonMessage()}
+                </PackageButton>
+              </PackageContainer>
+            );
+          })
+        ) : (
+          <NoResults>
+            <img src={noResultIcon} alt="No results found logo" />
+            <h2>Não há planos cadastradas</h2>
+          </NoResults>
+        )}
       </PackageList>
     </Content>
   );

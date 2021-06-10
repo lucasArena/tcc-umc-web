@@ -57,7 +57,7 @@ const PurchasePackageModal: React.FC<IModalProps> = ({
       <Form ref={formRef} onSubmit={handleSubmit}>
         <h1>Confirmação compra de pacote</h1>
 
-        {downGradePackage && (
+        {!!downGradePackage && (
           <DowngradeWarning>
             ATENÇÃO! Você pacote com menos quantidade de vagas!
           </DowngradeWarning>

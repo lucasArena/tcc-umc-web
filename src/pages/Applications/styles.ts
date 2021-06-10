@@ -178,3 +178,21 @@ export const ApplicantActions = styled.aside`
     margin-left: 10px;
   }
 `;
+
+export const NoResults = styled.section`
+  display: flex;
+  align-items: center;
+
+  margin-top: 40px;
+
+  h2 {
+    font-size: 3rem;
+    color: ${(props) => props.theme.colors.primary};
+  }
+
+  img {
+    width: 700px;
+
+    margin-top: 20px;
+  }
+`;

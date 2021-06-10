@@ -82,7 +82,7 @@ const ResetPassword: React.FC = () => {
         });
       }
     },
-    [push, addToast, location.search],
+    [push, addToast, location.search, handleLoading],
   );
 
   const validateForm = useCallback(async () => {

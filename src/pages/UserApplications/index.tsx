@@ -11,7 +11,10 @@ import {
   Main,
   Item,
   ApplicationInfo,
+  NoResult,
 } from './styles';
+
+import noResultIcon from '../../assets/images/no-results.svg';
 
 interface ApplicationProps {
   id: number;
@@ -64,22 +67,29 @@ const UserApplications: React.FC = () => {
       </TitleSection>
 
       <Main>
-        {applications.map((application) => (
-          <Item key={application.id}>
-            <main>
-              <ApplicationInfo>
-                <section>
-                  <img
-                    src={application.job.company.avatar_url}
-                    alt={application.job.company.name}
-                  />
-                  <h3>{application.job.title}</h3>
-                </section>
-                <strong>{`Status: ${application.status.name}`}</strong>
-              </ApplicationInfo>
-            </main>
-          </Item>
-        ))}
+        {applications.length ? (
+          applications.map((application) => (
+            <Item key={application.id}>
+              <main>
+                <ApplicationInfo>
+                  <section>
+                    <img
+                      src={application.job.company.avatar_url}
+                      alt={application.job.company.name}
+                    />
+                    <h3>{application.job.title}</h3>
+                  </section>
+                  <strong>{`Status: ${application.status.name}`}</strong>
+                </ApplicationInfo>
+              </main>
+            </Item>
+          ))
+        ) : (
+          <NoResult>
+            <img src={noResultIcon} alt="No results found logo" />
+            <h2>Não há candidaturas cadastradas</h2>
+          </NoResult>
+        )}
       </Main>
     </Container>
   );

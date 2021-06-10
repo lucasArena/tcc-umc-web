@@ -5,13 +5,17 @@ import { useToast } from '../../../hooks/toast';
 
 import api from '../../../services/api';
 
+import noResultIcon from '../../../assets/images/no-results.svg';
+
 import {
   Container,
   Top,
   TitleSection,
   Main,
   Item,
+  ButtonContainer,
   ConfirmPaymentButton,
+  NoResults,
 } from './styles';
 
 interface PaymentProps {
@@ -19,9 +23,11 @@ interface PaymentProps {
   title: string;
   user: {
     name: string;
+    avatar: string;
     avatar_url?: string;
   };
   status: string;
+  buttonDisplay?: string;
 }
 
 const Payment: React.FC = () => {
@@ -33,12 +39,12 @@ const Payment: React.FC = () => {
   );
 
   const handleConfirmPayment = useCallback(
-    async (paymentId: number) => {
+    async (paymentId: number, status: string) => {
       try {
         const paymentUpdated = await api.patch<PaymentProps>(
           `/payments/${paymentId}`,
           {
-            status: 'Paid',
+            status,
           },
         );
 
@@ -59,13 +65,13 @@ const Payment: React.FC = () => {
 
         addToast({
           title: 'Sucesso',
-          description: 'Pagamento confirmado com sucesso',
+          description: 'Pagamento alterado com sucesso',
           type: 'success',
         });
       } catch (err) {
         addToast({
           title: 'Erro',
-          description: 'Erro ao tentar confirmar pagamento',
+          description: 'Erro ao tentar alterar pagamento',
           type: 'error',
         });
       }
@@ -77,7 +83,28 @@ const Payment: React.FC = () => {
     async function handleGetCompanyJobs() {
       const response = await api.get<PaymentProps[]>(`/payments`);
 
-      setPayments(response.data);
+      const paymentsFormatted = response.data.map((payment) => {
+        switch (payment.status) {
+          case 'Paid':
+            return {
+              ...payment,
+              buttonDisplay: 'Pago',
+            };
+          case 'Reproved':
+            return {
+              ...payment,
+              buttonDisplay: 'Reprovado',
+            };
+          case 'Canceled':
+            return {
+              ...payment,
+              buttonDisplay: 'Cancelado',
+            };
+          default:
+            return { ...payment };
+        }
+      });
+      setPayments(paymentsFormatted);
     }
 
     handleGetCompanyJobs();
@@ -90,26 +117,57 @@ const Payment: React.FC = () => {
         <h2>Pagamentos</h2>
       </TitleSection>
       <Main>
-        {payments.map((payment) => (
-          <Item key={payment.id}>
-            <main>
-              <img src={payment.user.avatar_url} alt={payment.title} />
-              <h3>{payment.user.name}</h3>
-            </main>
+        {payments.length ? (
+          payments.map((payment) => (
+            <Item key={payment.id}>
+              <main>
+                <img
+                  src={
+                    payment.user.avatar
+                      ? payment.user.avatar_url
+                      : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
+                  }
+                  alt={payment.title}
+                />
+                <h3>{payment.user.name}</h3>
+              </main>
 
-            <aside>
-              {payment.status === 'Paid' ? (
-                <h5>Pago</h5>
-              ) : (
-                <ConfirmPaymentButton
-                  onClick={() => handleConfirmPayment(payment.id)}
-                >
-                  Pagamento recebido
-                </ConfirmPaymentButton>
-              )}
-            </aside>
-          </Item>
-        ))}
+              <aside>
+                {payment.status !== 'Pendent' ? (
+                  <h5>{payment.buttonDisplay}</h5>
+                ) : (
+                  <ButtonContainer>
+                    <ConfirmPaymentButton
+                      style={{
+                        background: 'red',
+                        padding: '20px',
+                      }}
+                      onClick={() =>
+                        handleConfirmPayment(payment.id, 'Reproved')
+                      }
+                    >
+                      Pagamento negado
+                    </ConfirmPaymentButton>
+                    <ConfirmPaymentButton
+                      style={{
+                        background: 'green',
+                        padding: '20px',
+                      }}
+                      onClick={() => handleConfirmPayment(payment.id, 'Paid')}
+                    >
+                      Pagamento recebido
+                    </ConfirmPaymentButton>
+                  </ButtonContainer>
+                )}
+              </aside>
+            </Item>
+          ))
+        ) : (
+          <NoResults>
+            <img src={noResultIcon} alt="No results found logo" />
+            <h2>Não há pagamentos cadastrados</h2>
+          </NoResults>
+        )}
       </Main>
     </Container>
   );

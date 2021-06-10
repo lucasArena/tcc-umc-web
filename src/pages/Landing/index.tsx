@@ -13,6 +13,8 @@ import api from '../../services/api';
 import JobItem from '../../components/JobItem';
 import { useAuth } from '../../hooks/auth';
 
+import noResultIcon from '../../assets/images/no-results.svg';
+
 interface JobProps {
   id: number;
   title: string;
@@ -77,7 +79,8 @@ const Landing: React.FC = () => {
           ))
         ) : (
           <NoResult>
-            <span>Nenhuma vaga cadastrada</span>
+            <h2>Não há vagas cadastradas</h2>
+            <img src={noResultIcon} alt="No results found logo" />
           </NoResult>
         )}
       </JobList>

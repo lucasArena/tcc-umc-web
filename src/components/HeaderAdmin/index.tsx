@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FiBriefcase } from 'react-icons/fi';
+import { FiBriefcase, FiBarChart2 } from 'react-icons/fi';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { CgFeed } from 'react-icons/cg';
 
@@ -14,6 +14,10 @@ const HeaderAdmin: React.FC = () => {
       <LogoArea>
         <img src={logo} alt="Logo sistema" />
       </LogoArea>
+      <MenuItem to="/admin/reports" activeClassName="selected">
+        <FiBarChart2 width={20} />
+        Relatórios
+      </MenuItem>
       <MenuItem to="/admin/packages" activeClassName="selected">
         <FiBriefcase width={20} />
         Pacotes

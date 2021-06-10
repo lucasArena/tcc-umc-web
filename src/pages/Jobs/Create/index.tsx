@@ -126,6 +126,8 @@ const Profile: React.FC = () => {
               options={[
                 { value: '1', label: 'CLT' },
                 { value: '2', label: 'PJ' },
+                { value: '3', label: 'Freelance' },
+                { value: '4', label: 'Temporario' },
               ]}
             />
             <Input

@@ -37,19 +37,18 @@ export const JobList = styled.main`
 `;
 
 export const NoResult = styled.section`
-  flex: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100%;
 
-  span {
-    font-family: Poppins;
-    font-size: 1.6rem;
-    line-height: 2.6rem;
-    max-width: 25rem;
-    text-align: center;
+  margin-top: 40px;
 
-    color: ${(props) => props.theme.colors.textComplement};
+  img {
+    width: 700px;
+  }
+
+  h2 {
+    font-size: 3rem;
+    color: ${(props) => props.theme.colors.primary};
   }
 `;

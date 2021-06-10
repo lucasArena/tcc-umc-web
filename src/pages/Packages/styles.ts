@@ -63,3 +63,22 @@ export const PackageButton = styled(Button)`
   min-width: 200px;
   margin-top: auto;
 `;
+
+export const NoResults = styled.section`
+  display: flex;
+  align-items: center;
+
+  margin-top: 40px;
+
+  h2 {
+    font-size: 3rem;
+    color: ${(props) => props.theme.colors.primary};
+    min-width: 200px;
+  }
+
+  img {
+    width: 700px;
+
+    margin-top: 20px;
+  }
+`;

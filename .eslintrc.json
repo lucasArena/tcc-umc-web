@@ -31,6 +31,8 @@
   "rules": {
     "prettier/prettier": "error",
     "camelcase": "off",
+    "no-restricted-globals": "off",
+    "no-plusplus": "off",
     "import/no-duplicates": "off",
     "jsx-a11y/label-has-associated-control": "off",
     "@typescript-eslint/ban-types": "off",

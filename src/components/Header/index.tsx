@@ -96,7 +96,7 @@ const Header: React.FC = () => {
             )}
 
             {isAdmin && (
-              <DropDownItem to="/admin/packages">
+              <DropDownItem to="/admin/reports">
                 <RiAdminLine size={20} color="#E6E6F0" />
                 <span>Área do admin</span>
               </DropDownItem>

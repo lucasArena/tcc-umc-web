@@ -25,6 +25,7 @@ import CompanyLanding from '../pages/CompanyLanding';
 
 import UserApplications from '../pages/UserApplications';
 
+import Report from '../pages/Admin/Report';
 import AdminPackage from '../pages/Admin/Package';
 import AdminPackageCreate from '../pages/Admin/Package/Create';
 import AdminPackageUpdate from '../pages/Admin/Package/Update';
@@ -79,6 +80,8 @@ const Routes: React.FC = () => (
     />
 
     <Route path="/users/applications" component={UserApplications} isPrivate />
+
+    <Route exact path="/admin/reports" component={Report} isPrivate isAdmin />
 
     <Route
       exact

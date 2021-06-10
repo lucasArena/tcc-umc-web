@@ -5,7 +5,9 @@ import { useAuth } from '../../../hooks/auth';
 
 import api from '../../../services/api';
 
-import { Container, Top, TitleSection, Main, Item } from './styles';
+import { Container, Top, TitleSection, Main, Item, NoResults } from './styles';
+
+import noResultIcon from '../../../assets/images/no-results.svg';
 
 interface PackageProps {
   id: number;
@@ -40,13 +42,20 @@ const Jobs: React.FC = () => {
         <h2>Pacotes</h2>
       </TitleSection>
       <Main>
-        {packages.map((pack) => (
-          <Item key={pack.id} to={`/admin/package/edit/${pack.id}`}>
-            <main>
-              <h3>{pack.name}</h3>
-            </main>
-          </Item>
-        ))}
+        {packages.length ? (
+          packages.map((pack) => (
+            <Item key={pack.id} to={`/admin/package/edit/${pack.id}`}>
+              <main>
+                <h3>{pack.name}</h3>
+              </main>
+            </Item>
+          ))
+        ) : (
+          <NoResults>
+            <img src={noResultIcon} alt="No results found logo" />
+            <h2>Não há pacotes cadastradas</h2>
+          </NoResults>
+        )}
       </Main>
     </Container>
   );
