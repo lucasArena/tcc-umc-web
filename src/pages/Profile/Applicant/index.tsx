@@ -393,7 +393,6 @@ const Profile: React.FC = () => {
               name="born"
               id="born"
               width="25%"
-              disabled
             />
           </InputGroup>
 
