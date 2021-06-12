@@ -124,7 +124,7 @@ const Report: React.FC = () => {
       });
       console.log(error);
     }
-  }, []);
+  }, [addToast]);
 
   const colorBackground = useMemo(() => {
     return Array.from(

@@ -47,6 +47,7 @@ const Profile: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: FormProps) => {
+      handleLoading(true);
       const dataFormatted = {
         name: data.name.replace(/[^a-zA-Z ]+/g, ''),
         email: data.email,
@@ -82,7 +83,9 @@ const Profile: React.FC = () => {
           description: 'Usuário atualizado com sucesso',
           type: 'success',
         });
+        handleLoading(false);
       } catch (err) {
+        handleLoading(false);
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
@@ -104,7 +107,7 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [id, addToast, updateUser],
+    [id, addToast, updateUser, handleLoading],
   );
 
   const handleAvatarUpdate = useCallback(

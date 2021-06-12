@@ -1,8 +1,6 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
-import getMoneyValue from '../../utils/getMoneyValue';
-
 import IChart from './interface/Ichart';
 
 import { Container } from './styles';
