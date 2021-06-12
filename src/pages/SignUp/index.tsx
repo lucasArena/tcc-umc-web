@@ -26,6 +26,7 @@ import Select from '../../components/Select';
 import api from '../../services/api';
 import { useToast } from '../../hooks/toast';
 import { useLoad } from '../../hooks/load';
+import InputMask from '../../components/InputMask';
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
@@ -63,8 +64,8 @@ const SignUp: React.FC = () => {
           profile_type,
         });
 
+        handleLoading(false);
         push('/');
-
         addToast({
           title: 'Successo',
           description: 'Usuário criado com sucesso',
@@ -151,7 +152,8 @@ const SignUp: React.FC = () => {
               placeholder="Nome"
               onKeyUp={validateForm}
             />
-            <Input
+            <InputMask
+              mask="(99) 99999-9999"
               width="100%"
               name="phone"
               placeholder="Telefone"

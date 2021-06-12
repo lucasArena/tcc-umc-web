@@ -37,7 +37,7 @@ interface JobProps {
     name: string;
   };
   applications?: {
-    user: {
+    applicant: {
       id: number;
     };
   }[];
@@ -128,7 +128,7 @@ const JobDetails: React.FC = () => {
   const applicationRule = useMemo(() => {
     if (job) {
       const userApplied = job.applications?.find(
-        (application) => application.user.id === user.id,
+        (application) => application.applicant.id === user.profile.id,
       );
 
       if (userApplied) {

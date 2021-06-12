@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { parse } from 'date-fns';
+import { format, parse } from 'date-fns';
+import * as Yup from 'yup';
 
 import {
   Container,
@@ -20,9 +21,17 @@ import api from '../../../services/api';
 
 import Chart from '../../../components/Chart';
 import InputMask from '../../../components/InputMask';
+import getMoneyValue from '../../../utils/getMoneyValue';
+import { useMemo } from 'react';
+import getValidationErrors from '../../../utils/getValidationErrors';
+import { useRef } from 'react';
+import { useToast } from '../../../hooks/toast';
+import { FormHandles } from '@unform/core';
 
 const Report: React.FC = () => {
   const { isLoading, handleLoading } = useLoad();
+  const formFilterRef = useRef<FormHandles>(null);
+  const { addToast } = useToast();
 
   const [date, setDate] = useState<Date>(new Date());
   const [paymentsPerDay, setPaymentsPerDay] = useState<IPaymentChart>(
@@ -64,28 +73,77 @@ const Report: React.FC = () => {
     handleGetPaymentsPerMonth();
   }, [date, handleLoading]);
 
-  const handleFilter = useCallback((filterData: IPaymentFilter) => {
-    const { date_filter } = filterData;
+  const handleFilter = useCallback(async (filterData: IPaymentFilter) => {
+    try {
+      formFilterRef.current?.setErrors([]);
+      const { date_filter } = filterData;
 
-    const dateFormatted = date_filter.split('/').reverse().join('-');
-    const dateParsed = parse(dateFormatted, 'yyyy-M', new Date());
+      const dateFormatted = date_filter.split('/').reverse().join('-');
+      const dateParsed = parse(dateFormatted, 'yyyy-M', new Date());
 
-    if (isNaN(dateParsed.getTime())) {
-      throw new Error('Data inválida');
+      const schema = Yup.object().shape({
+        date_filter: Yup.date().test(
+          'test_valid_date',
+          'Data inválida',
+          (date) => {
+            if (!date) {
+              return false;
+            }
+
+            if (isNaN(date.getTime())) {
+              throw new Error('Data inválida');
+            }
+
+            return true;
+          },
+        ).required('Data é obrigatório para filtrar'),
+      });
+
+      await schema.validate({ date_filter: dateParsed }, {
+        abortEarly: false,
+      });
+
+      setDate(dateParsed);
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(error);
+        formFilterRef.current?.setErrors(errors);
+
+        addToast({
+          title: 'Erro',
+          description: 'Data inválida',
+          type: 'error',
+        });
+        return;
+      }
+
+      addToast({
+        title: 'Erro',
+        description: `Erro ao tentar atualizar o cadastro`,
+        type: 'error',
+      });
+      console.log(error);
     }
-
-    setDate(dateParsed);
   }, []);
+
+  const colorBackground = useMemo(() => {
+    return Array.from(
+      { length: paymentsPerDay.labels && paymentsPerDay.labels.length },
+      () => 'rgba(255, 99, 132, 0.2)',
+    );
+  }, [paymentsPerDay])
 
   return (
     <Container>
-      <Filter onSubmit={handleFilter}>
+      <Filter ref={formFilterRef} onSubmit={handleFilter} initialData={{
+        date_filter: format(date, 'MM/Y')
+      }}>
         <InputMask
           mask="99/9999"
           name="date_filter"
           id="date_filter"
           width="25%"
-          placeholder="Pesquisar data"
+          placeholder="Pesquisar data (mês-ano)"
         />
         <FilterButton type="submit" disabled={isLoading}>
           {isLoading ? 'Pesquisando...' : 'Pesquisar'}
@@ -102,27 +160,29 @@ const Report: React.FC = () => {
                 {
                   label: 'Valor em reais',
                   data: paymentsPerDay.data,
-                  backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                  ],
-                  borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                  ],
+                  backgroundColor: colorBackground,
                   borderWidth: 1,
                 },
               ],
             }}
             height={400}
+            options={{
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  ticks: {
+                    callback: function (value: any) {
+                      return getMoneyValue(value);
+                    }
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                }
+              },
+            }}
           />
         </ChartItem>
       </ChartContainer>

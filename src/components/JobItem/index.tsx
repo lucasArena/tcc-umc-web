@@ -75,9 +75,12 @@ const JobItem: React.FC<JobItemProps> = ({
             <strong>{available}</strong>
           </p>
         </div>
-        <button type="button" onClick={handleJobDetails}>
-          Saiba mais
-        </button>
+        {user.profile_type === 'App\\ApplicantEloquent' && (
+          <button type="button" onClick={handleJobDetails}>
+            Saiba mais
+          </button>
+        )}
+
       </footer>
     </Container>
   );

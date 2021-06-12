@@ -47,6 +47,7 @@ interface FormProps {
   avatar_url: string;
   born: string;
   cpf: string;
+  phone: string;
   country_id: string;
   bio: string;
   civil_state: string;
@@ -111,6 +112,7 @@ const Profile: React.FC = () => {
         .replace(/\./g, '')
         .replace(/,/g, '.');
 
+      const formattedPhone = data.phone.replace(/\D/g, '');
       const formattedCPF = data.cpf.replace(/\D/g, '');
       const formattedBorn = data.born.split('/').reverse().join('-');
 
@@ -118,6 +120,7 @@ const Profile: React.FC = () => {
         name: data.name.replace(/[^a-zA-Z ]+/g, ''),
         email: data.email,
         bio: data.bio,
+        phone: formattedPhone,
         contract: data.contract,
         cpf: formattedCPF,
         born: formattedBorn,
@@ -182,6 +185,8 @@ const Profile: React.FC = () => {
           civil_state: Yup.string().required('Estado cívil obrigatória'),
           country_id: Yup.string().required('Nacionalidade obrigatória'),
           bio: Yup.string().required('Apresentação obrigatória'),
+          phone: Yup.string().min(11, 'Telefone inválido')
+            .required('Telefone obrigatório'),
           salary_expectations: Yup.string().required(
             'Pretensão salarial obrigatória',
           ),
@@ -199,6 +204,7 @@ const Profile: React.FC = () => {
         const userUpdated = await api.put(`/users/${id}`, {
           name: dataFormatted.name,
           email: dataFormatted.email,
+          phone: dataFormatted.phone,
           profile_type: 'App\\ApplicantEloquent',
           profile: {
             id: user.profile.id,
@@ -222,6 +228,8 @@ const Profile: React.FC = () => {
         });
         handleLoading(false);
       } catch (err) {
+        handleLoading(false);
+
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
@@ -241,7 +249,6 @@ const Profile: React.FC = () => {
           description: `Erro ao tentar atualizar o cadastro`,
           type: 'error',
         });
-        handleLoading(false);
       }
     },
     [
@@ -308,6 +315,7 @@ const Profile: React.FC = () => {
         const {
           name,
           email,
+          phone,
           avatar_url,
           profile: {
             gender,
@@ -329,6 +337,7 @@ const Profile: React.FC = () => {
           country_id,
           gender,
           cpf,
+          phone,
           born: born && format(parseISO(born), 'dd/MM/Y'),
           bio,
           civil_state,
@@ -386,13 +395,20 @@ const Profile: React.FC = () => {
             <Input label="Nome" name="name" id="name" />
           </InputGroup>
           <InputGroup>
-            <Input label="Email" name="email" id="email" width="75%" disabled />
+            <Input label="Email" name="email" id="email" width="40%" disabled />
+            <InputMask
+              label="Telefone"
+              mask="(99) 99999-9999"
+              width="30%"
+              name="phone"
+              placeholder="Telefone"
+            />
             <InputMask
               mask="99/99/9999"
-              label="Data de nascimento"
+              label="Nascimento"
               name="born"
               id="born"
-              width="25%"
+              width="30%"
             />
           </InputGroup>
 

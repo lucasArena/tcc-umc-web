@@ -9,22 +9,26 @@ import { FiCamera } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 
-import { Container, ProfileInfo, AvatarContainer, Form } from './styles';
+import { Container, ProfileInfo, AvatarContainer, Form, SubmitButton } from './styles';
 
 import warningIcon from '../../../assets/images/icons/warning.svg';
 
 import InputGroup from '../../../components/InputGroup';
 import Input from '../../../components/Input';
+import InputMask from '../../../components/InputMask';
 
 import api from '../../../services/api';
 
 import { useAuth } from '../../../hooks/auth';
 import { useToast } from '../../../hooks/toast';
+import { useLoad } from '../../../hooks/load';
+
 import getValidationErrors from '../../../utils/getValidationErrors';
 
 interface FormProps {
   name: string;
   email: string;
+  phone: string;
   avatar_url: string;
   profile: {
     trade_name: string;
@@ -36,6 +40,7 @@ const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const { user, updateUser } = useAuth();
+  const { isLoading, handleLoading } = useLoad();
 
   const [id] = useState(user.id);
   const [userData, setUserData] = useState<FormProps>({} as FormProps);
@@ -45,6 +50,7 @@ const Profile: React.FC = () => {
       const dataFormatted = {
         name: data.name.replace(/[^a-zA-Z ]+/g, ''),
         email: data.email,
+        phone: data.phone.replace(/\D/g, ''),
       };
 
       try {
@@ -54,6 +60,8 @@ const Profile: React.FC = () => {
           email: Yup.string()
             .email('Email inválido')
             .required('Nome obrigatório'),
+          phone: Yup.string().min(11, 'Telefone inválido')
+            .required('Telefone obrigatório'),
         });
 
         await schema.validate(dataFormatted, {
@@ -63,6 +71,7 @@ const Profile: React.FC = () => {
         const userUpdated = await api.put(`/users/${id}`, {
           name: dataFormatted.name,
           email: dataFormatted.email,
+          phone: dataFormatted.phone,
           profile_type: 'App\\AdminEloquent',
         });
 
@@ -128,6 +137,7 @@ const Profile: React.FC = () => {
         const {
           name,
           email,
+          phone,
           avatar_url,
           profile: { trade_name, cnpj },
         } = userInfo;
@@ -135,6 +145,7 @@ const Profile: React.FC = () => {
         setUserData({
           name,
           email,
+          phone,
           avatar_url,
           profile: {
             trade_name,
@@ -180,7 +191,14 @@ const Profile: React.FC = () => {
             <Input label="Nome" name="name" id="name" />
           </InputGroup>
           <InputGroup>
-            <Input label="Email" name="email" id="email" width="100%" />
+            <Input label="Email" name="email" id="email" width="50%" disabled />
+            <InputMask
+              label="Telefone"
+              mask="(99) 99999-9999"
+              width="50%"
+              name="phone"
+              placeholder="Telefone"
+            />
           </InputGroup>
         </fieldset>
         <footer>
@@ -190,7 +208,9 @@ const Profile: React.FC = () => {
             <br />
             Preencha todos os dados
           </p>
-          <button type="submit">Atualizar</button>
+          <SubmitButton type="submit" disabled={isLoading}>
+            {isLoading ? 'Processando...' : 'Atualizar'}
+          </SubmitButton>
         </footer>
       </Form>
     </Container>

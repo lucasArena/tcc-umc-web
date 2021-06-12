@@ -34,6 +34,7 @@ import getValidationErrors from '../../../utils/getValidationErrors';
 interface FormProps {
   name: string;
   email: string;
+  phone: string;
   avatar_url: string;
   profile: {
     trade_name: string;
@@ -87,9 +88,12 @@ const Profile: React.FC = () => {
         handleLoading(true);
         formRef.current?.setErrors([]);
 
+        const phoneFormatted = data.phone.replace(/\D/g, '');
         const cnpjFormatted = data.profile.cnpj.replace(/\D/g, '');
+
         const dataFormatted = {
           ...data,
+          phone: phoneFormatted,
           profile: {
             ...data.profile,
             cnpj: cnpjFormatted,
@@ -119,6 +123,8 @@ const Profile: React.FC = () => {
           email: Yup.string()
             .email('Email inválido')
             .required('Nome obrigatório'),
+          phone: Yup.string().min(11, 'Telefone inválido')
+            .required('Telefone obrigatório'),
           profile: Yup.object().shape({
             cnpj: Yup.string()
               .test(
@@ -148,6 +154,7 @@ const Profile: React.FC = () => {
         const userUpdated = await api.put(`/users/${id}`, {
           name: dataFormatted.name,
           email: dataFormatted.email,
+          phone: dataFormatted.phone,
           profile_type: 'App\\CompanyEloquent',
           profile: dataFormatted.profile,
         });
@@ -218,6 +225,7 @@ const Profile: React.FC = () => {
         const {
           name,
           email,
+          phone,
           avatar_url,
           profile: { trade_name, cnpj },
         } = userInfo;
@@ -225,6 +233,7 @@ const Profile: React.FC = () => {
         setUserData({
           name,
           email,
+          phone,
           avatar_url,
           profile: {
             trade_name,
@@ -270,14 +279,21 @@ const Profile: React.FC = () => {
             <Input label="Nome" name="name" id="name" />
           </InputGroup>
           <InputGroup>
-            <Input label="Email" name="email" id="email" width="50%" disabled />
+            <Input label="Email" name="email" id="email" width="40%" disabled />
             <InputMask
               mask="99.999.999/9999-99"
               label="CNPJ"
               name="profile[cnpj]"
               id="cnpj"
-              width="40%"
+              width="30%"
               onBlur={(e) => handleValidateCNPJ(e.target.value)}
+            />
+            <InputMask
+              label="Telefone"
+              mask="(99) 99999-9999"
+              width="30%"
+              name="phone"
+              placeholder="Telefone"
             />
           </InputGroup>
 

@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { Form as UnformForm } from '@unform/web';
 
+import Button from '../../../components/Button';
+
 import backgroundThings from '../../../assets/images/background-things.svg';
+
 
 export const Container = styled.div`
   width: 100vw;
@@ -233,3 +236,5 @@ export const UploadResumeContainer = styled.section`
     }
   }
 `;
+
+export const SubmitButton = styled(Button)``;
