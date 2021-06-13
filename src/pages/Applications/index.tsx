@@ -32,7 +32,7 @@ interface JobProps {
   };
   applications: {
     id: number;
-    user: {
+    applicant: {
       id: number;
       name: string;
       avatar: string;
@@ -147,16 +147,16 @@ const Applications: React.FC = () => {
                       <ApplicantInfo>
                         <img
                           src={
-                            application.user.avatar
-                              ? application.user.avatar_url
+                            application.applicant.avatar
+                              ? application.applicant.avatar_url
                               : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
                           }
-                          alt={application.user.name}
+                          alt={application.applicant.name}
                         />
-                        <h4>{application.user.name}</h4>
+                        <h4>{application.applicant.name}</h4>
                         <Link
                           to={{
-                            pathname: application.user.profile.resume_url,
+                            pathname: application.applicant.profile.resume_url,
                           }}
                           target="_blank"
                         >
