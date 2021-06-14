@@ -9,7 +9,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem 0;
+  padding: 0;
   width: 100%;
   background: ${(props) => props.theme.colors.primaryDark};
 

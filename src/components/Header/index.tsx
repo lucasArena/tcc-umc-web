@@ -5,7 +5,7 @@ import { BsPerson } from 'react-icons/bs';
 import { BiBuilding } from 'react-icons/bi';
 import { RiAdminLine } from 'react-icons/ri';
 
-import logo from '../../assets/images/logo.svg';
+import logo from '../../assets/images/logo.png';
 
 import {
   Container,
