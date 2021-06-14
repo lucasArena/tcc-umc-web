@@ -28,6 +28,7 @@ interface JobProps {
   description: string;
   created_at: string;
   company: {
+    avatar: string;
     avatar_url?: string;
     profile: {
       trade_name: string;
@@ -70,6 +71,7 @@ const JobDetails: React.FC = () => {
       description: '',
       created_at: '',
       company: {
+        avatar: '',
         avatar_url: undefined,
         profile: {
           trade_name: '',
@@ -128,7 +130,7 @@ const JobDetails: React.FC = () => {
   const applicationRule = useMemo(() => {
     if (job) {
       const userApplied = job.applications?.find(
-        (application) => application.applicant.id === user.profile.id,
+        (application) => application.applicant.id === user.id,
       );
 
       if (userApplied) {
@@ -220,8 +222,8 @@ const JobDetails: React.FC = () => {
         <AvatarContainer>
           <img
             src={
-              (job.company && job.company.avatar_url) ||
-              'https://images6.fanpop.com/image/photos/38200000/Spongebob-Icon-spongebob-squarepants-38211111-200-200.jpg'
+              (job.company.avatar && job.company.avatar_url) ||
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
             }
             alt="Lucas Arena"
           />

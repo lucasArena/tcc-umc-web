@@ -1,5 +1,5 @@
-import { darken } from 'polished';
 import styled from 'styled-components';
+import Button from '../../components/Button';
 
 export const Container = styled.div`
   width: 85%;
@@ -101,82 +101,9 @@ export const ApplicationInfo = styled.div`
   }
 `;
 
-export const ApplicantList = styled.footer`
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-  max-width: 60%;
-
-  section {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-
-      padding: 10px;
-      text-decoration: none;
-      min-width: 100px;
-      background: ${(props) => props.theme.colors.secundary};
-      transition: background 0.4;
-
-      span {
-        margin-right: 5px;
-        color: ${(props) => props.theme.colors.buttonText};
-      }
-
-      &:hover {
-        background: ${(props) => darken(0.04, props.theme.colors.secundary)};
-      }
-
-      svg {
-        color: ${(props) => props.theme.colors.buttonText};
-      }
-    }
-
-    & + section {
-      margin-top: 10px;
-    }
-  }
-`;
-
-export const ApplicantInfo = styled.div`
-  display: flex;
-  align-items: center;
-  min-width: 60%;
-
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-
-  h4 {
-    color: ${(props) => props.theme.colors.primary};
-    margin-right: 10px;
-  }
-
-  a {
-    margin-left: auto;
-  }
-`;
-
-export const ApplicantActions = styled.aside`
-  display: flex;
-
-  button {
-    min-width: 150px;
-  }
-
-  div + div {
-    margin-left: 10px;
-  }
+export const ButtonApplicantsDetails = styled(Button)`
+  width: 200px;
+  margin-right: 50px;
 `;
 
 export const NoResults = styled.section`

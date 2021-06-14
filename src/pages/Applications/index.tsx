@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { FiDownload } from 'react-icons/fi';
-
-import { Link } from 'react-router-dom';
-import Button from '../../components/Button';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
 
 import api from '../../services/api';
+
+import getMoneyValue from '../../utils/getMoneyValue';
 
 import {
   Container,
@@ -14,13 +13,12 @@ import {
   Main,
   Item,
   ApplicationInfo,
-  ApplicantList,
-  ApplicantInfo,
-  ApplicantActions,
+  ButtonApplicantsDetails,
   NoResults,
 } from './styles';
 
 import noResultIcon from '../../assets/images/no-results.svg';
+import ApplicantsDetailsModal from './ApplicantsDetailsModal';
 
 interface JobProps {
   id: number;
@@ -30,41 +28,57 @@ interface JobProps {
     avatar_url?: string;
     avatar?: string;
   };
-  applications: {
-    id: number;
-    applicant: {
-      id: number;
-      name: string;
-      avatar: string;
-      avatar_url: string;
-      profile: {
-        resume_url: string;
-      };
-    };
-    status: {
-      id: number;
-      name: string;
-    };
-  }[];
+  applications: Application[];
 }
-
-interface ApplicationProps {
-  job: {
-    available: number;
-  };
-  status: {
+interface Application {
+  id: number;
+  applicant: {
     id: number;
     name: string;
+    email: string;
+    phone: string;
+    avatar: string;
+    avatar_url: string;
+    profile: {
+      bio: string;
+      contract: string;
+      salary_expectations: string;
+      born: string;
+      civil_state: string;
+      resume_url: string;
+    };
+  };
+  job: JobProps;
+  status: {
+    id: number;
+    name: 'Aprovado' | 'Reprovado' | 'Pendente';
   };
 }
 
 const Applications: React.FC = () => {
   const { user } = useAuth();
+  const { addToast } = useToast();
+
   const [jobs, setJobs] = useState<JobProps[]>([] as JobProps[]);
+
+  const [applicantDetailsModalOpen, setApplicantDetailsModalOpen] = useState(
+    false,
+  );
+
+  const [modalApplications, setModalApplications] = useState<Application[]>([]);
+
+  function handleShowApplicantsDetails(applications: Application[]): void {
+    setModalApplications(applications);
+    setApplicantDetailsModalOpen(!applicantDetailsModalOpen);
+  }
+
+  function toggleModal(): void {
+    setApplicantDetailsModalOpen(!applicantDetailsModalOpen);
+  }
 
   const handleChangeStatusApplication = useCallback(
     async (application_id: number, status_id: number) => {
-      const response = await api.patch<ApplicationProps>(
+      const response = await api.patch<Application>(
         `/applications/${application_id}`,
         {
           status: {
@@ -75,6 +89,12 @@ const Applications: React.FC = () => {
 
       const statusApplication = response.data.status;
       const availablePositions = response.data.job.available;
+
+      addToast({
+        title: 'Candidatura',
+        description: 'Mudança de status de candidatura realizada com sucesso',
+        type: 'success',
+      });
 
       setJobs((oldJobs) =>
         oldJobs.map((oldJob) => {
@@ -99,7 +119,7 @@ const Applications: React.FC = () => {
         }),
       );
     },
-    [],
+    [addToast],
   );
 
   useEffect(() => {
@@ -108,7 +128,51 @@ const Applications: React.FC = () => {
         `/companies/${user.profile.id}/jobs`,
       );
 
-      setJobs(response.data);
+      const dataFormatted = response.data.length
+        ? response.data.map((job) => {
+            return {
+              ...job,
+              applications: job.applications.map((application) => {
+                const {
+                  applicant: { profile, ...rest_applicant },
+                  ...rest
+                } = application;
+
+                const civilStateFormatted = profile.civil_state
+                  ? profile.civil_state
+                  : 'Não informado';
+
+                const bornFormatted = profile.born
+                  ? profile.born.split('-').reverse().join('/')
+                  : 'Não informado';
+
+                const salaryExpectationsFormatted = profile.salary_expectations
+                  ? getMoneyValue(Number(profile.salary_expectations))
+                  : 'Não informado';
+
+                const contractFormatted = profile.born
+                  ? profile.contract
+                  : 'Não informado';
+
+                return {
+                  ...rest,
+                  applicant: {
+                    ...rest_applicant,
+                    profile: {
+                      ...profile,
+                      civil_state: civilStateFormatted,
+                      born: bornFormatted,
+                      salary_expectations: salaryExpectationsFormatted,
+                      contract: contractFormatted,
+                    },
+                  },
+                };
+              }),
+            };
+          })
+        : [];
+
+      setJobs(dataFormatted);
     }
 
     handleGetCompanyJobs();
@@ -138,57 +202,19 @@ const Applications: React.FC = () => {
                     />
                     <h3>{job.title}</h3>
                   </section>
-                  <strong>{`Disponíveis: ${job.available}`}</strong>
-                </ApplicationInfo>
 
-                <ApplicantList>
-                  {job.applications.map((application) => (
-                    <section key={application.id}>
-                      <ApplicantInfo>
-                        <img
-                          src={
-                            application.applicant.avatar
-                              ? application.applicant.avatar_url
-                              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
-                          }
-                          alt={application.applicant.name}
-                        />
-                        <h4>{application.applicant.name}</h4>
-                        <Link
-                          to={{
-                            pathname: application.applicant.profile.resume_url,
-                          }}
-                          target="_blank"
-                        >
-                          <span>Abrir CV</span>
-                          <FiDownload width={20} />
-                        </Link>
-                      </ApplicantInfo>
-                      {application.status.id !== 1 ? (
-                        <h5>{application.status.name}</h5>
-                      ) : (
-                        <ApplicantActions>
-                          <Button
-                            type="button"
-                            onClick={() =>
-                              handleChangeStatusApplication(application.id, 2)
-                            }
-                            style={{ background: '#e33d3d' }}
-                          >
-                            Reprovar
-                          </Button>
-                          <Button
-                            type="button"
-                            onClick={() =>
-                              handleChangeStatusApplication(application.id, 3)}
-                          >
-                            Aprovar
-                          </Button>
-                        </ApplicantActions>
-                      )}
-                    </section>
-                  ))}
-                </ApplicantList>
+                  <section>
+                    <ButtonApplicantsDetails
+                      type="button"
+                      onClick={() =>
+                        handleShowApplicantsDetails(job.applications)
+                      }
+                    >
+                      Candidatos
+                    </ButtonApplicantsDetails>
+                    <strong>{`Disponíveis: ${job.available}`}</strong>
+                  </section>
+                </ApplicationInfo>
               </main>
             </Item>
           ))
@@ -198,6 +224,13 @@ const Applications: React.FC = () => {
             <h2>Não há candidaturas cadastradas</h2>
           </NoResults>
         )}
+
+        <ApplicantsDetailsModal
+          isOpen={applicantDetailsModalOpen}
+          setIsOpen={toggleModal}
+          handleChangeStatusApplication={handleChangeStatusApplication}
+          applications={modalApplications}
+        />
       </Main>
     </Container>
   );

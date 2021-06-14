@@ -22,6 +22,9 @@ export const Container = styled.div<ButtonProps>`
     cursor: pointer;
     transition: background 0.4s;
 
+    display: flex;
+    justify-content: center;
+
     &:hover {
       background: ${(props) =>
         !props.disabled && props.theme.colors.secundaryDark};

@@ -69,7 +69,11 @@ const PurchasePackageModal: React.FC<IModalProps> = ({
         <section>
           <span>
             Pelo valor de
-            <strong> {packageValue} </strong>
+            <strong> 
+{' '}
+{packageValue}
+{' '}
+ </strong>
           </span>
           <strong />
         </section>

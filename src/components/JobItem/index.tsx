@@ -35,7 +35,7 @@ const JobItem: React.FC<JobItemProps> = ({
 
   const isSignup = useMemo(() => {
     return !!applications.find((applicantion) => {
-      return applicantion.applicant.id === user.profile.id;
+      return applicantion.applicant.id === user.id;
     });
   }, [user, applications]);
 
