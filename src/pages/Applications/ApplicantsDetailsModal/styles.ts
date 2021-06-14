@@ -9,10 +9,9 @@ interface LabelStatusApplicationProps {
 export const ApplicantList = styled.main`
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
   max-width: 100%;
 
-  padding: 48px 40px;
+  padding: 20px 40px;
 `;
 
 export const ApplicantItem = styled.section`
@@ -130,6 +129,10 @@ export const ApplicantDetailsProfessional = styled.div`
   flex-direction: column;
 
   margin-top: 10px;
+
+  p {
+    word-break: break-all;
+  }
 `;
 
 export const ApplicantDetailsGroup = styled.div`
