@@ -185,7 +185,8 @@ const Profile: React.FC = () => {
           civil_state: Yup.string().required('Estado cívil obrigatória'),
           country_id: Yup.string().required('Nacionalidade obrigatória'),
           bio: Yup.string().required('Apresentação obrigatória'),
-          phone: Yup.string().min(11, 'Telefone inválido')
+          phone: Yup.string()
+            .min(11, 'Telefone inválido')
             .required('Telefone obrigatório'),
           salary_expectations: Yup.string().required(
             'Pretensão salarial obrigatória',
@@ -457,7 +458,13 @@ const Profile: React.FC = () => {
 
         <fieldset>
           <legend>Informações para empresas</legend>
-          <Textarea label="Apresentação" id="bio" name="bio" />
+          <Textarea
+            label="Apresentação"
+            id="bio"
+            name="bio"
+            maxLength={500}
+            placeholder="Digite no máximo até 500 caracteres"
+          />
 
           <InputGroup>
             <InputMoney

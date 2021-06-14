@@ -72,7 +72,7 @@ const Select: React.FC<SelectProps> = ({
             ...styles,
             background: state.isFocused ? '#EBEBF5' : '#F8F8FC',
             fontWeight: state.isFocused ? 600 : 500,
-            fontSize: '16px',
+            fontSize: '13px',
             lineHeight: '26px',
             color: '#6A6180',
             height: '56px',
@@ -84,7 +84,7 @@ const Select: React.FC<SelectProps> = ({
             alignItems: 'center',
             cursor: 'pointer',
           }),
-          menuList: (styles, state) => ({
+          menuList: (styles) => ({
             ...styles,
             background: '#F8F8FC',
           }),
