@@ -204,11 +204,12 @@ const Applications: React.FC = () => {
                   </section>
 
                   <section>
-                    {job.applications.length && (
+                    {!!job.applications.length && (
                       <ButtonApplicantsDetails
                         type="button"
                         onClick={() =>
-                          handleShowApplicantsDetails(job.applications)}
+                          handleShowApplicantsDetails(job.applications)
+                        }
                       >
                         Candidatos
                       </ButtonApplicantsDetails>
