@@ -21,6 +21,7 @@ interface ApplicationProps {
   user: {
     id: number;
     name: string;
+    avatar: string;
     avatar_url: string;
     profile: {
       resume_url: string;
@@ -36,6 +37,7 @@ interface ApplicationProps {
     available: number;
     company: {
       name: string;
+      avatar: string;
       avatar_url?: string;
     };
   };
@@ -74,7 +76,11 @@ const UserApplications: React.FC = () => {
                 <ApplicationInfo>
                   <section>
                     <img
-                      src={application.job.company.avatar_url}
+                      src={
+                        application.job.company.avatar
+                          ? application.job.company.avatar_url
+                          : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6o4MplGmPR_M3Z_mSwecQ3cKlpZzaJOyhQ&usqp=CAU'
+                      }
                       alt={application.job.company.name}
                     />
                     <h3>{application.job.title}</h3>
