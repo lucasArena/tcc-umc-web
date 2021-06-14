@@ -5,10 +5,16 @@ import ReactModal from 'react-modal';
 interface IModalProps {
   children: any;
   isOpen: boolean;
+  style?: Object;
   setIsOpen: () => void;
 }
 
-const Modal: React.FC<IModalProps> = ({ children, isOpen, setIsOpen }) => {
+const Modal: React.FC<IModalProps> = ({
+  children,
+  isOpen,
+  style,
+  setIsOpen,
+}) => {
   const [modalStatus, setModalStatus] = useState(isOpen);
 
   useEffect(() => {
@@ -23,6 +29,7 @@ const Modal: React.FC<IModalProps> = ({ children, isOpen, setIsOpen }) => {
       ariaHideApp={false}
       style={{
         content: {
+          ...style,
           top: '50%',
           left: '50%',
           right: 'auto',
@@ -34,7 +41,6 @@ const Modal: React.FC<IModalProps> = ({ children, isOpen, setIsOpen }) => {
           borderRadius: '8px',
           width: '900px',
           border: 'none',
-          height: '90vh',
         },
         overlay: {
           backgroundColor: '#7c7c7d',

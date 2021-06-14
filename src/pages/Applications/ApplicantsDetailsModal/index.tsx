@@ -48,6 +48,7 @@ interface IModalProps {
     status_id: number,
   ) => void;
   applications: Application[];
+  style: Object;
 }
 
 const ApplicantsDetailsModal: React.FC<IModalProps> = ({
@@ -55,9 +56,10 @@ const ApplicantsDetailsModal: React.FC<IModalProps> = ({
   setIsOpen,
   handleChangeStatusApplication,
   applications,
+  style,
 }) => {
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen} style={{ height: '90vh' }}>
       <h1>Candidatos para a vaga</h1>
 
       <ApplicantList>

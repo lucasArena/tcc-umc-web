@@ -204,14 +204,15 @@ const Applications: React.FC = () => {
                   </section>
 
                   <section>
-                    <ButtonApplicantsDetails
-                      type="button"
-                      onClick={() =>
-                        handleShowApplicantsDetails(job.applications)
-                      }
-                    >
-                      Candidatos
-                    </ButtonApplicantsDetails>
+                    {job.applications.length && (
+                      <ButtonApplicantsDetails
+                        type="button"
+                        onClick={() =>
+                          handleShowApplicantsDetails(job.applications)}
+                      >
+                        Candidatos
+                      </ButtonApplicantsDetails>
+                    )}
                     <strong>{`Disponíveis: ${job.available}`}</strong>
                   </section>
                 </ApplicationInfo>
@@ -230,6 +231,9 @@ const Applications: React.FC = () => {
           setIsOpen={toggleModal}
           handleChangeStatusApplication={handleChangeStatusApplication}
           applications={modalApplications}
+          style={{
+            height: '90vh',
+          }}
         />
       </Main>
     </Container>

@@ -53,7 +53,7 @@ const PurchasePackageModal: React.FC<IModalProps> = ({
   }, [purchasePackage, userPackage]);
 
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen} style={{ height: '45vh' }}>
       <Form ref={formRef} onSubmit={handleSubmit}>
         <h1>Confirmação compra de pacote</h1>
 
