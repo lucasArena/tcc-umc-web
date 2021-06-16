@@ -146,7 +146,7 @@ const Profile: React.FC = () => {
             Preencha todos os dados
           </p>
           <button type="submit">
-            {isLoading ? 'Processando...' : 'Editar'}
+            {isLoading ? 'Processando...' : 'Criar'}
           </button>
         </footer>
       </Form>
