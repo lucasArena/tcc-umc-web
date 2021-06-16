@@ -26,7 +26,9 @@ interface ApplicationProps {
   quantity: number;
   available: number;
   applications: {
-    status_id: number;
+    status: {
+      id: number;
+    };
   }[];
 }
 
@@ -50,7 +52,7 @@ const CompanyLanding: React.FC = () => {
           available,
           applications: applications.length,
           approved: applications.reduce((applicationsApproved, current) => {
-            return current.status_id === 3
+            return current.status.id === 3
               ? applicationsApproved + 1
               : applicationsApproved;
           }, 0),
