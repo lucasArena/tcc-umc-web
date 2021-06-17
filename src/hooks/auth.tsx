@@ -7,7 +7,10 @@ export interface User {
   email: string;
   avatar: string;
   avatar_url?: string;
-  profile_type: string;
+  profile_type:
+    | 'App\\ApplicantEloquent'
+    | 'App\\CompanyEloquent'
+    | 'App\\AdminEloquent';
   profile: {
     [key: string]: string | number | any;
   };

@@ -8,6 +8,7 @@ export default createGlobalStyle`
   }
 
   html, body, #root {
+    width: 100%;
     height: 100%;
     margin: 0;
 
@@ -18,8 +19,6 @@ export default createGlobalStyle`
   }
   #root {
     font-size: 100%;
-    display: flex;
-    justify-content: center;
   }
 
   body, input, button, textarea {

@@ -30,6 +30,7 @@ import AdminPackage from '../pages/Admin/Package';
 import AdminPackageCreate from '../pages/Admin/Package/Create';
 import AdminPackageUpdate from '../pages/Admin/Package/Update';
 
+import NotAllow from '../pages/NotAllow';
 import AdminPayment from '../pages/Admin/Payment';
 
 const Routes: React.FC = () => (
@@ -38,13 +39,37 @@ const Routes: React.FC = () => (
     <Route path="/signup" component={SignUp} />
     <Route path="/forgot-password" component={ForgotPassword} />
     <Route path="/reset-password" component={ResetPassword} />
-    <Route path="/profile/applicant" component={ProfileApplicant} isPrivate />
-    <Route path="/profile/company" component={ProfileCompany} isPrivate />
-    <Route path="/profile/admin" component={ProfileAdmin} isPrivate />
+    <Route
+      path="/profile/applicant"
+      component={ProfileApplicant}
+      isPrivate
+      isTopHeader
+      isApplicant
+    />
+    <Route
+      path="/profile/company"
+      component={ProfileCompany}
+      isPrivate
+      isTopHeader
+      isCompany
+    />
+    <Route
+      path="/profile/admin"
+      component={ProfileAdmin}
+      isPrivate
+      isTopHeader
+      isAdmin
+    />
     <Route path="/landing" component={Landing} isPrivate />
-    <Route path="/jobDetails" component={JobDetails} isPrivate />
+    <Route path="/jobDetails" component={JobDetails} isPrivate isApplicant />
 
-    <Route path="/packages" component={Packages} isPrivate />
+    <Route
+      path="/packages"
+      component={Packages}
+      isPrivate
+      isTopHeader
+      isApplicant
+    />
 
     <Route
       path="/company/landing"
@@ -79,7 +104,12 @@ const Routes: React.FC = () => (
       isPrivate
     />
 
-    <Route path="/users/applications" component={UserApplications} isPrivate />
+    <Route
+      path="/users/applications"
+      component={UserApplications}
+      isPrivate
+      isApplicant
+    />
 
     <Route exact path="/admin/reports" component={Report} isPrivate isAdmin />
 
@@ -105,7 +135,8 @@ const Routes: React.FC = () => (
 
     <Route path="/admin/payment/" component={AdminPayment} isPrivate isAdmin />
 
-    <Route path="/success" component={SuccessSubmit} />
+    <Route path="/not-allow" component={NotAllow} isPrivate />
+    <Route path="/success" component={SuccessSubmit} isPrivate />
   </Switch>
 );
 

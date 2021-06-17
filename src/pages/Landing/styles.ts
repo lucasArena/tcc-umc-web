@@ -8,7 +8,7 @@ export const Content = styled.div`
   flex-direction: column;
 
   background: ${(props) => props.theme.colors.background};
-  margin: 1rem auto;
+  overflow-y: auto;
 
   @media (min-width: 1100px) {
     flex: 1;
