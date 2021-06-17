@@ -22,7 +22,6 @@ import hidePasswordIcon from '../../assets/images/icons/hide-password.svg';
 import Background from '../../components/Background';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import Checkbox from '../../components/Checkbox';
 
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
