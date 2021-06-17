@@ -2,7 +2,7 @@ import React, { useRef, useCallback, useMemo } from 'react';
 
 import { FiCheckSquare } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
-import { Form, DowngradeWarning } from './styles';
+import { Form, DowngradeWarning, BankAccountDetails } from './styles';
 import Modal from '../../../components/Modal';
 import getMoneyValue from '../../../utils/getMoneyValue';
 // import { User } from '../../../hooks/auth';
@@ -53,7 +53,7 @@ const PurchasePackageModal: React.FC<IModalProps> = ({
   }, [purchasePackage, userPackage]);
 
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen} style={{ height: '45vh' }}>
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen} style={{ height: '55vh' }}>
       <Form ref={formRef} onSubmit={handleSubmit}>
         <h1>Confirmação compra de pacote</h1>
 
@@ -66,14 +66,46 @@ const PurchasePackageModal: React.FC<IModalProps> = ({
           <span>Você está comprando o pacote:</span>
           <strong>{purchasePackage.name}</strong>
         </section>
+
+        <BankAccountDetails>
+          <h3>Dados para realizar pagamento</h3>
+          <section>
+            <div>
+              <span>
+                <strong>Banco: </strong>
+                <span>BANCO INTER - 077</span>
+              </span>
+            </div>
+          </section>
+          <section>
+            <div>
+              <span>
+                <strong>Âgencia:</strong>
+                <span>4334198-5</span>
+              </span>
+              <span>
+                <strong>Conta:</strong>
+                <span>0001</span>
+              </span>
+            </div>
+          </section>
+          <section>
+            <div>
+              <span>
+                <strong>Nome:</strong>
+                <span>Work Systems MEI</span>
+              </span>
+              <span>
+                <strong>CNPJ:</strong>
+                <span>35.476.252/0001-76</span>
+              </span>
+            </div>
+          </section>
+        </BankAccountDetails>
         <section>
           <span>
-            Pelo valor de
-            <strong> 
-{' '}
-{packageValue}
-{' '}
- </strong>
+            <strong>Valor total: </strong>
+            <span> {packageValue} </span>
           </span>
           <strong />
         </section>

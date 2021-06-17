@@ -17,7 +17,7 @@ export const Form = styled(Unform)`
     font-size: 2rem;
 
     strong {
-      margin-left: 5px;
+      color: ${({ theme }) => theme.colors.primaryDarker};
     }
   }
 
@@ -55,4 +55,27 @@ export const Form = styled(Unform)`
 export const DowngradeWarning = styled.h3`
   color: ${({ theme }) => theme.colors.deleteButtonText};
   margin-bottom: 20px;
+`;
+
+export const BankAccountDetails = styled.section`
+  display: flex;
+  flex-direction: column;
+
+  margin-top: 20px;
+
+  h3 {
+    color: ${({ theme }) => theme.colors.primaryLight};
+  }
+
+  section {
+    display: flex;
+
+    div {
+      span {
+        & + span {
+          margin-left: 15px;
+        }
+      }
+    }
+  }
 `;
