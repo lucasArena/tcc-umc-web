@@ -125,7 +125,9 @@ const Profile: React.FC = () => {
         cpf: formattedCPF,
         born: formattedBorn,
         salary_expectations: formattedSalaryExpectations,
-        country_id: data.country_id,
+        country: {
+          id: data.country_id,
+        },
         civil_state: data.civil_state,
       };
 
@@ -183,7 +185,9 @@ const Profile: React.FC = () => {
             )
             .required('CPF obrigatório'),
           civil_state: Yup.string().required('Estado cívil obrigatória'),
-          country_id: Yup.string().required('Nacionalidade obrigatória'),
+          country: Yup.object().shape({
+            id: Yup.string().required('Nacionalidade obrigatória'),
+          }),
           bio: Yup.string().required('Apresentação obrigatória'),
           phone: Yup.string()
             .min(11, 'Telefone inválido')
@@ -216,7 +220,9 @@ const Profile: React.FC = () => {
             civil_state: dataFormatted.civil_state,
             gender: 'M',
             contract: dataFormatted.contract,
-            country_id: dataFormatted.country_id,
+            country: {
+              id: dataFormatted.country.id,
+            },
           },
         });
 
