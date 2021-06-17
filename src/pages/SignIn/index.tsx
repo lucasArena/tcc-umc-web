@@ -138,14 +138,6 @@ const SignIn: React.FC = () => {
 
             <AuxiliaryActions>
               <div>
-                <Checkbox
-                  type="checkbox"
-                  id="remember-credencials"
-                  name="remeber-credencials"
-                />
-                <label htmlFor="remember-credencials">Lembrar-me</label>
-              </div>
-              <div>
                 <Link to="/forgot-password">Esqueci minha senha</Link>
               </div>
             </AuxiliaryActions>

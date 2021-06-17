@@ -18,6 +18,7 @@ import {
   NoResults,
 } from './styles';
 
+type PaymentOptions = 'Pendent' | 'Paid' | 'Reproved' | 'Canceled';
 interface PaymentProps {
   id: number;
   title: string;
@@ -26,7 +27,7 @@ interface PaymentProps {
     avatar: string;
     avatar_url?: string;
   };
-  status: string;
+  status: PaymentOptions;
   buttonDisplay?: string;
 }
 
@@ -50,12 +51,22 @@ const Payment: React.FC = () => {
 
         const { id: idUpdated, status: statusUpdated } = paymentUpdated.data;
 
+        const statusUpdatedCast: PaymentOptions = statusUpdated;
+
+        const displayButtonOptions = {
+          Pendent: 'Pendente',
+          Paid: 'Pago',
+          Reproved: 'Reprovado',
+          Canceled: 'Cancelado',
+        };
+
         setPayments((oldPayments) => {
           return oldPayments.map((oldPayment) => {
             if (oldPayment.id === idUpdated) {
               return {
                 ...oldPayment,
                 status: statusUpdated,
+                buttonDisplay: displayButtonOptions[statusUpdatedCast],
               };
             }
 
